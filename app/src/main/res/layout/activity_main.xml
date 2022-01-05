@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tv_select"
+        android:layout_width="match_parent"
+        android:layout_height="97dp"
+        android:background="@color/purple_500"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:textSize="40dp"
+        android:text="항목 선택 결과는?" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="5dp"
+        android:textSize="40sp"/>
+
+
+</LinearLayout>
