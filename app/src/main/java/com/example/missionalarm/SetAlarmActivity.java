@@ -25,7 +25,6 @@ public class SetAlarmActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
 
         list.add("알람 이름");
-        list.add("시간");
         list.add("요일");
         list.add("알람음");
         list.add("진동");

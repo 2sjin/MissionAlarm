@@ -1,11 +1,27 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
     tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="412dp"
+        android:layout_height="575dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAlarm">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="529dp"
+            android:background="#888888"
+            android:dividerHeight="5dp"
+            android:textSize="40sp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewAlarm"
@@ -14,7 +30,7 @@
         android:background="@color/purple_500"
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:text="항목 선택 결과는?"
+        android:text="모든 알람이 꺼진\n상태입니다"
         android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -43,18 +59,6 @@
         android:text="..."
         app:layout_constraintBottom_toBottomOf="@+id/textViewAlarm"
         app:layout_constraintStart_toEndOf="@+id/buttonAddAlarm" />
-
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="419dp"
-        android:layout_height="529dp"
-        android:background="#888888"
-        android:dividerHeight="5dp"
-        android:textSize="40sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAlarm" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
