@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MissionAlarm">
         <activity
+            android:name=".CustomListItemView"
+            android:exported="false" />
+        <activity
             android:name=".AlarmItemView"
             android:exported="false" />
         <activity
