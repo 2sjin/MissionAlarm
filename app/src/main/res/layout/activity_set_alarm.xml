@@ -6,4 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".SetAlarmActivity">
 
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="421dp"
+        android:layout_height="761dp"
+        android:background="#888888"
+        android:dividerHeight="5dp"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.148" />
+
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="clickedButtonCancel"
+        android:text="취소"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="clickedButtonAdd"
+        android:text="저장"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.699"
+        app:layout_constraintStart_toEndOf="@+id/buttonCancel" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
