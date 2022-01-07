@@ -1,18 +1,17 @@
 package com.example.missionalarm;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import java.util.*;
 
-
 public class MainActivity extends AppCompatActivity {
     List<String> list = new ArrayList<>();
     ListView listView;
-    int selectedItemIndex;
+    TextView tv;
+    int selectedIndex;
 
     // 애플리케이션 초기 실행
     @Override
@@ -20,9 +19,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final TextView tv = findViewById(R.id.textViewAlarm);
+        // 컴포넌트 불러오기
+        tv = findViewById(R.id.textViewAlarm);
         listView = findViewById(R.id.listView);
 
+        // 초기 리스트 추가 및 새로고침
         list.add("06:00");
         updateList();
 
@@ -30,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                selectedItemIndex = position;
-                String data = (String) adapterView.getItemAtPosition(position);
+                selectedIndex = position;
+                String data = (String) adapterView.getItemAtPosition(selectedIndex);
                 tv.setText(data);
                 setAlarm();
             }
@@ -55,22 +56,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         String myTimeData = data.getStringExtra("time");
-
         switch(requestCode) {
-            case 0: // 알람을 추가했을 때
-                if (resultCode == RESULT_OK) {
-                    list.add(myTimeData);
-                }
-                break;
-            case 1: // 알람을 수정했을 때
+            case 0: // 알람 추가 화면에서 복귀 후
                 if (resultCode == RESULT_OK)
-                    list.set(selectedItemIndex, myTimeData);
+                    list.add(myTimeData);
+                break;
+            case 1: // 알람 수정 화면에서 복귀 후
+                if (resultCode == RESULT_OK)    // 알람 수정
+                    list.set(selectedIndex, myTimeData);
+                else if(resultCode == -4)   // 알람 삭제
+                    list.remove(selectedIndex);
                 break;
         }
-
         updateList();
-
-
     }
 
     // 리스트 새로고침
