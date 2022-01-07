@@ -13,17 +13,28 @@ public class SetAlarmActivity extends AppCompatActivity {
     ListView listView;
     TextView tvSelect;
     TimePicker timePicker;
+    Button buttonRemove;
     int hour, min;
+    long t1, t2;
+    static boolean visibleRemove = false;
 
+    // Activity 초기 실행
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
 
-        // 컴포넌트 불러오기
+        // 컴포넌트 ID 불러오기
         tvSelect = findViewById(R.id.textViewAlarm);
         listView = findViewById(R.id.listView);
         timePicker = findViewById(R.id.timePicker);
+        buttonRemove = findViewById(R.id.buttonRemove);
+
+        // 알람 추가 시에는 [삭제] 버튼 숨기기
+        if(visibleRemove == true)
+            buttonRemove.setVisibility(View.VISIBLE);
+        else
+            buttonRemove.setVisibility(View.INVISIBLE);
 
         // 시간 선택기를 24시간제로 설정
         timePicker.setIs24HourView(true);
@@ -63,6 +74,19 @@ public class SetAlarmActivity extends AppCompatActivity {
         });
     }
 
+    // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
+    @Override
+    public void onBackPressed() {
+        t2 = System.currentTimeMillis();
+        Toast.makeText(this, "'뒤로' 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        if (t2 - t1 < 2000) {
+            super.onBackPressed();
+            moveTaskToBack(true);   // 태스크를 백그라운드로 이동
+            finishAndRemoveTask();          // 액티비티 종료 + 태스크 리스트에서 지우기
+        }
+        t1 = System.currentTimeMillis();
+    }
+
     // 취소 버튼을 눌렀을 때
     public void clickedButtonCancel(View view) {
         Intent intent = new Intent(this, MainActivity.class);
@@ -85,4 +109,7 @@ public class SetAlarmActivity extends AppCompatActivity {
         finish();
     }
 
+    public static void setVisibleRemove(boolean b) {
+        visibleRemove = b;
+    }
 }

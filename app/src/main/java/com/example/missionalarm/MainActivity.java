@@ -12,14 +12,15 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     TextView tv;
     int selectedIndex;
+    long t1 = 0, t2 = 0;
 
-    // 애플리케이션 초기 실행
+    // Activity 초기 실행
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 컴포넌트 불러오기
+        // 컴포넌트 ID 불러오기
         tv = findViewById(R.id.textViewAlarm);
         listView = findViewById(R.id.listView);
 
@@ -39,14 +40,29 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
+    @Override
+    public void onBackPressed() {
+        t2 = System.currentTimeMillis();
+        Toast.makeText(MainActivity.this, "'뒤로' 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        if (t2 - t1 < 2000) {
+            super.onBackPressed();
+            moveTaskToBack(true);   // 태스크를 백그라운드로 이동
+            finishAndRemoveTask();          // 액티비티 종료 + 태스크 리스트에서 지우기
+        }
+        t1 = System.currentTimeMillis();
+    }
+
     // 알람 추가 버튼 클릭 시
     public void addAlarm(View view) {
+        SetAlarmActivity.setVisibleRemove(false);
         Intent intent = new Intent(this, SetAlarmActivity.class);
         startActivityForResult(intent, 0);
     }
 
     // 알람 수정
     public void setAlarm() {
+        SetAlarmActivity.setVisibleRemove(true);
         Intent intent = new Intent(this, SetAlarmActivity.class);
         startActivityForResult(intent, 1);
     }
