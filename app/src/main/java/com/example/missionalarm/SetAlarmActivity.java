@@ -34,7 +34,7 @@ public class SetAlarmActivity extends AppCompatActivity {
         if(visibleRemove == true)
             buttonRemove.setVisibility(View.VISIBLE);
         else
-            buttonRemove.setVisibility(View.INVISIBLE);
+            buttonRemove.setVisibility(View.GONE);
 
         // 시간 선택기를 24시간제로 설정
         timePicker.setIs24HourView(true);
@@ -97,7 +97,7 @@ public class SetAlarmActivity extends AppCompatActivity {
     // 선택 버튼을 눌렀을 때
     public void clickedButtonAdd (View view) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("time", String.format("%02d:%02d", hour, min));
+        intent.putExtra("time", String.format("%02d:%02d\n월 화 수 목 금 토 일", hour, min));
         setResult(RESULT_OK, intent);
         finish();
     }
