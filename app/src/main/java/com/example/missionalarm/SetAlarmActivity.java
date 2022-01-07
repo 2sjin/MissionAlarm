@@ -5,16 +5,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.time.LocalTime;
 import java.util.*;
 
 public class SetAlarmActivity extends AppCompatActivity {
     List<String> list = new ArrayList<>();
+
     ListView listView;
     TextView tvSelect;
     TimePicker timePicker;
     Button buttonRemove;
-    int hour, min;
+    EditText etName;
+
+    int hour, minute;
+    boolean vibration, bell;
+
     long t1, t2;
     static boolean visibleRemove = false;
 
@@ -29,6 +37,7 @@ public class SetAlarmActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         timePicker = findViewById(R.id.timePicker);
         buttonRemove = findViewById(R.id.buttonRemove);
+        etName = findViewById(R.id.etName);
 
         // 알람 추가 시에는 [삭제] 버튼 숨기기
         if(visibleRemove == true)
@@ -42,10 +51,9 @@ public class SetAlarmActivity extends AppCompatActivity {
         // 현재 시각 구하기
         LocalTime now = LocalTime.now();
         hour = now.getHour();
-        min = now.getMinute();
+        minute = now.getMinute();
 
         // 리스트 항목 추가
-        list.add("알람 이름");
         list.add("알람음");
         list.add("진동");
         list.add("미션");
@@ -67,9 +75,9 @@ public class SetAlarmActivity extends AppCompatActivity {
         // 시간 선택기의 값을 변경했을 때
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
-            public void onTimeChanged(TimePicker timePicker, int hourChanged, int minChanged) {
+            public void onTimeChanged(TimePicker timePicker, int hourChanged, int minuteChanged) {
                 hour = hourChanged;
-                min = minChanged;
+                minute = minuteChanged;
             }
         });
     }
@@ -87,22 +95,28 @@ public class SetAlarmActivity extends AppCompatActivity {
         t1 = System.currentTimeMillis();
     }
 
-    // 취소 버튼을 눌렀을 때
+    // [취소] 버튼을 눌렀을 때
     public void clickedButtonCancel(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         setResult(RESULT_CANCELED, intent);
         finish();
     }
 
-    // 선택 버튼을 눌렀을 때
+    // [저장] 버튼을 눌렀을 때
     public void clickedButtonAdd (View view) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("time", String.format("%02d:%02d\n월 화 수 목 금 토 일", hour, min));
+        intent.putExtra("hour", hour);
+        intent.putExtra("minute", minute);
+        intent.putExtra("name", etName.getText().toString());
+        intent.putExtra("vibration", vibration);
+        intent.putExtra("bell", bell);
+        intent.putExtra("mission", "미션");
+        intent.putExtra("penalty", "벌칙");
         setResult(RESULT_OK, intent);
         finish();
     }
 
-    // 삭제 버튼을 눌렀을 때
+    // [삭제] 버튼을 눌렀을 때
     public void clickedRemoveCancel(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         setResult(-4, intent);

@@ -8,7 +8,9 @@ import android.widget.*;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
-    List<String> list = new ArrayList<>();
+    ArrayList<String> listFront = new ArrayList<>();
+    ArrayList<AlarmItem> listBack = new ArrayList<>();
+
     ListView listView;
     TextView tv;
     int selectedIndex;
@@ -24,9 +26,10 @@ public class MainActivity extends AppCompatActivity {
         tv = findViewById(R.id.textViewAlarm);
         listView = findViewById(R.id.listView);
 
-        // 초기 리스트 추가 및 새로고침
-        list.add("06:00");
+        // 리스트 새로고침
         updateList();
+
+
 
         // 리스트의 항목 클릭 시
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
                 setAlarm();
             }
         });
+
+
     }
 
     // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
@@ -71,17 +76,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        String myTimeData = data.getStringExtra("time");
+        AlarmItem alarmTemp = new AlarmItem();
+        alarmTemp.setTime(data.getIntExtra("hour", 0), data.getIntExtra("minute", 0));
+        alarmTemp.setName(data.getStringExtra("name"));
+        alarmTemp.setVibration(false);
+        alarmTemp.setBell(true);
+        alarmTemp.setMission("미션");
+        alarmTemp.setPenalty("벌칙");
         switch(requestCode) {
             case 0: // 알람 추가 화면에서 복귀 후
-                if (resultCode == RESULT_OK)
-                    list.add(myTimeData);
+                if (resultCode == RESULT_OK) {
+                    listBack.add(alarmTemp);
+                    listFront.add(alarmTemp.getInfo());
+                }
                 break;
             case 1: // 알람 수정 화면에서 복귀 후
-                if (resultCode == RESULT_OK)    // 알람 수정
-                    list.set(selectedIndex, myTimeData);
-                else if(resultCode == -4)   // 알람 삭제
-                    list.remove(selectedIndex);
+                if (resultCode == RESULT_OK) {    // 알람 수정
+                    listBack.set(selectedIndex, alarmTemp);
+                    listFront.set(selectedIndex, alarmTemp.getInfo());
+                }
+                else if(resultCode == -4) {   // 알람 삭제
+                    listFront.remove(selectedIndex);
+                }
                 break;
         }
         updateList();
@@ -89,8 +105,9 @@ public class MainActivity extends AppCompatActivity {
 
     // 리스트 새로고침
     public void updateList() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listFront);
         listView.setAdapter(adapter);
     }
+
 
 }

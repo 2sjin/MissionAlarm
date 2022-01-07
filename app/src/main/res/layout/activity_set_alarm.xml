@@ -22,7 +22,7 @@
         android:id="@+id/listView"
         android:layout_width="399dp"
         android:layout_height="164dp"
-        android:layout_marginBottom="236dp"
+        android:layout_marginBottom="100dp"
         android:background="#888888"
         android:dividerHeight="5dp"
         android:textSize="40sp"
@@ -136,5 +136,22 @@
             android:text="취소" />
 
     </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="406dp"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="알람명"
+            android:text="알람"
+            android:focusable="true"
+            android:focusableInTouchMode="true"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
