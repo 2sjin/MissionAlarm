@@ -12,6 +12,7 @@ import java.util.*;
 public class MainActivity extends AppCompatActivity {
     List<String> list = new ArrayList<>();
     ListView listView;
+    int selectedItemIndex;
 
     // 애플리케이션 초기 실행
     @Override
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                selectedItemIndex = position;
                 String data = (String) adapterView.getItemAtPosition(position);
                 tv.setText(data);
                 setAlarm();
@@ -52,21 +54,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
+        String myTimeData = data.getStringExtra("time");
+
         switch(requestCode) {
             case 0: // 알람을 추가했을 때
                 if (resultCode == RESULT_OK) {
-                    String myData = data.getStringExtra("setTime");
-                    list.add(myData);
+                    list.add(myTimeData);
                 }
                 break;
             case 1: // 알람을 수정했을 때
                 if (resultCode == RESULT_OK)
-                    list.add("수정된 알람");
+                    list.set(selectedItemIndex, myTimeData);
                 break;
         }
 
-
         updateList();
+
+
     }
 
     // 리스트 새로고침

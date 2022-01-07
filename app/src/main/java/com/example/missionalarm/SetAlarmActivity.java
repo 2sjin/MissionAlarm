@@ -74,9 +74,8 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     // 선택 버튼을 눌렀을 때
     public void clickedButtonAdd (View view) {
-
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("setTime", String.format("%02d:%02d", hour, min));
+        intent.putExtra("time", String.format("%02d:%02d", hour, min));
 
         setResult(RESULT_OK, intent);
         finish();

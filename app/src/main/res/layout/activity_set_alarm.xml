@@ -10,27 +10,23 @@
         android:id="@+id/timePicker"
         android:layout_width="379dp"
         android:layout_height="194dp"
+        android:layout_marginTop="52dp"
         android:timePickerMode="spinner"
-        app:layout_constraintBottom_toTopOf="@+id/listView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.52" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="408dp"
-        android:layout_height="240dp"
-        android:layout_marginTop="2dp"
+        android:layout_width="399dp"
+        android:layout_height="164dp"
+        android:layout_marginBottom="236dp"
         android:background="#888888"
         android:dividerHeight="5dp"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636"></ListView>
+        app:layout_constraintStart_toStartOf="parent"></ListView>
 
     <Button
         android:id="@+id/buttonCancel"
@@ -63,64 +59,66 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/listView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timePicker">
+        app:layout_constraintTop_toBottomOf="@+id/timePicker"
+        app:layout_constraintVertical_bias="0.058">
 
         <ToggleButton
             android:id="@+id/tbSunday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOn="[일]"
-            android:textOff="일" />
+            android:textOff="일"
+            android:textOn="[일]" />
 
         <ToggleButton
             android:id="@+id/tbMonday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOn="[월]"
-            android:textOff="월" />
+            android:textOff="월"
+            android:textOn="[월]" />
 
         <ToggleButton
             android:id="@+id/tbTuesday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOn="[화]"
-            android:textOff="화" />
+            android:textOff="화"
+            android:textOn="[화]" />
 
         <ToggleButton
             android:id="@+id/tbWednesday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOn="[수]"
-            android:textOff="수" />
+            android:textOff="수"
+            android:textOn="[수]" />
 
         <ToggleButton
             android:id="@+id/tbThrusday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOn="[목]"
-            android:textOff="목" />
+            android:textOff="목"
+            android:textOn="[목]" />
 
         <ToggleButton
             android:id="@+id/tbFriday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOn="[금]"
-            android:textOff="금" />
+            android:textOff="금"
+            android:textOn="[금]" />
 
         <ToggleButton
             android:id="@+id/tbSaturday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOn="[토]"
-            android:textOff="토" />
+            android:textOff="토"
+            android:textOn="[토]" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
