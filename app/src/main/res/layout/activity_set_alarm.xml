@@ -148,8 +148,7 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="알람명"
-            android:text="알람"
+            android:hint="알람 이름"
             android:focusable="true"
             android:focusableInTouchMode="true"/>
     </com.google.android.material.textfield.TextInputLayout>

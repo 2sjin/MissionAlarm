@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 알람 추가 버튼 클릭 시
     public void addAlarm(View view) {
+        SetAlarmActivity.setAlarmItem(null);
         SetAlarmActivity.setVisibleRemove(false);
         Intent intent = new Intent(this, SetAlarmActivity.class);
         startActivityForResult(intent, 0);
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 알람 수정
     public void setAlarm() {
+        SetAlarmActivity.setAlarmItem(listBack.get(selectedIndex));
         SetAlarmActivity.setVisibleRemove(true);
         Intent intent = new Intent(this, SetAlarmActivity.class);
         startActivityForResult(intent, 1);
@@ -79,10 +81,10 @@ public class MainActivity extends AppCompatActivity {
         AlarmItem alarmTemp = new AlarmItem();
         alarmTemp.setTime(data.getIntExtra("hour", 0), data.getIntExtra("minute", 0));
         alarmTemp.setName(data.getStringExtra("name"));
-        alarmTemp.setVibration(false);
-        alarmTemp.setBell(true);
-        alarmTemp.setMission("미션");
-        alarmTemp.setPenalty("벌칙");
+        alarmTemp.setVibration(data.getBooleanExtra("vibration", false));
+        alarmTemp.setBell(data.getBooleanExtra("Bell", true));
+        alarmTemp.setMission(data.getStringExtra("mission"));
+        alarmTemp.setPenalty(data.getStringExtra("penalty"));
         switch(requestCode) {
             case 0: // 알람 추가 화면에서 복귀 후
                 if (resultCode == RESULT_OK) {
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     listFront.set(selectedIndex, alarmTemp.getInfo());
                 }
                 else if(resultCode == -4) {   // 알람 삭제
+                    listBack.remove(selectedIndex);
                     listFront.remove(selectedIndex);
                 }
                 break;

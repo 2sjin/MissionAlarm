@@ -25,6 +25,7 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     long t1, t2;
     static boolean visibleRemove = false;
+    static AlarmItem alarm;
 
     // Activity 초기 실행
     @Override
@@ -48,10 +49,19 @@ public class SetAlarmActivity extends AppCompatActivity {
         // 시간 선택기를 24시간제로 설정
         timePicker.setIs24HourView(true);
 
-        // 현재 시각 구하기
-        LocalTime now = LocalTime.now();
-        hour = now.getHour();
-        minute = now.getMinute();
+        // 초기화
+        if(alarm == null) {     // 알람 추가: 시간 초기화
+            LocalTime now = LocalTime.now();
+            hour = now.getHour();
+            minute = now.getMinute();
+        }
+        else {    // 알람 수정: 알람 데이터를 가져와서 컴포넌트에 출력
+            hour = alarm.hour;
+            minute = alarm.minute;
+            timePicker.setHour(alarm.hour);
+            timePicker.setMinute(alarm.minute);
+            etName.setText(alarm.name);
+        }
 
         // 리스트 항목 추가
         list.add("알람음");
@@ -126,4 +136,9 @@ public class SetAlarmActivity extends AppCompatActivity {
     public static void setVisibleRemove(boolean b) {
         visibleRemove = b;
     }
+
+    public static void setAlarmItem(AlarmItem a) {
+        alarm = a;
+    }
+
 }
