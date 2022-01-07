@@ -10,9 +10,8 @@ import java.util.*;
 
 
 public class MainActivity extends AppCompatActivity {
-    List<String> listItem = new ArrayList<>();
+    List<String> list = new ArrayList<>();
     ListView listView;
-    ListView exampleList;
 
     // 애플리케이션 초기 실행
     @Override
@@ -23,11 +22,18 @@ public class MainActivity extends AppCompatActivity {
         final TextView tv = findViewById(R.id.textViewAlarm);
         listView = findViewById(R.id.listView);
 
-        listItem.add("Test1");
-        listItem.add("Test2");
-        listItem.add("Test3");
-
+        list.add("06:00");
         updateList();
+
+        // 리스트의 항목 클릭 시
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String data = (String) adapterView.getItemAtPosition(position);
+                tv.setText(data);
+                setAlarm();
+            }
+        });
     }
 
     // 알람 추가 버튼 클릭 시
@@ -44,25 +50,29 @@ public class MainActivity extends AppCompatActivity {
 
     // startActivityForResult 이후 메인 화면으로 돌아올 때
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
+        switch(requestCode) {
             case 0: // 알람을 추가했을 때
-                if (resultCode == RESULT_OK)
-                    listItem.add("새로운 알람");
+                if (resultCode == RESULT_OK) {
+                    String myData = data.getStringExtra("setTime");
+                    list.add(myData);
+                }
                 break;
             case 1: // 알람을 수정했을 때
                 if (resultCode == RESULT_OK)
-                    listItem.add("수정된 알람");
+                    list.add("수정된 알람");
                 break;
         }
+
+
         updateList();
     }
 
     // 리스트 새로고침
     public void updateList() {
-        exampleList = findViewById(R.id.listView);
-        CustomListItemView item = new CustomListItemView(this, (ArrayList<String>) listItem);
-        exampleList.setAdapter(item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+        listView.setAdapter(adapter);
     }
+
 }
