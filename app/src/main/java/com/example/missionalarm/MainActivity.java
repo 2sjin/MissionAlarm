@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadComponentId();
         updateList();
+        updateNextAlarm();
 
         // 리스트의 항목 클릭 시
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         updateList();
+        updateNextAlarm();
     }
 
     // 레이아웃에서 컴포넌트 ID 가져오기
@@ -114,6 +116,29 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
+    // 다음 알람 새로고침
+    public void updateNextAlarm() {
+        int temp;
+        ArrayList<Integer> listTemp = new ArrayList<>();
+        if(listBack.size() == 0) {
+            tv.setText("다음 알람 없음");
+            return;
+        }
+        listTemp.clear();
+        for(int i=0; i<listBack.size(); i++) {
+            temp = 0;
+            temp += listBack.get(i).hour * 100;
+            temp += listBack.get(i).minute;
+            for(int j=0; j<7; j++) {
+                if(listBack.get(i).week[j] == true) {
+                    temp += j * 10000;
+                    break;
+                }
+            }
+            listTemp.add(temp);
+        }
+        tv.setText(Collections.min(listTemp).toString());
+    }
 
 
 }
