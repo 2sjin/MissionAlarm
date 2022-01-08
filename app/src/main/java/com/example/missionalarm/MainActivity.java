@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     TextView tvNextAlarm;
 
+    AlarmItem alarmTemp;
     int selectedIndex;
     long t1, t2;
 
@@ -75,26 +76,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        AlarmItem alarmTemp = new AlarmItem();
-        alarmTemp.setTime(data.getIntExtra("hour", 0), data.getIntExtra("minute", 0));
-        for(int i=0; i<7; i++)
-            alarmTemp.setWeek(i, data.getBooleanExtra("week_" + i, false));
-        alarmTemp.setName(data.getStringExtra("name"));
-        alarmTemp.setRingtone(Uri.parse(data.getStringExtra("ringtoneName")), data.getIntExtra("ringtoneVolume", 50));
-        alarmTemp.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
-        for(int i=0; i<3; i++)
-            alarmTemp.setMission(i, data.getBooleanExtra("mission_" + i, false));
-        for(int i=0; i<2; i++)
-            alarmTemp.setPenalty(i, data.getBooleanExtra("penalty_" + i, false));
         switch(requestCode) {
             case 0: // 알람 추가 화면에서 복귀 후
                 if (resultCode == RESULT_OK) {
+                    alarmTemp = new AlarmItem();
+                    updateAlarmTemp(data);
                     listBack.add(alarmTemp);
                     listFront.add(alarmTemp.getInfo());
                 }
                 break;
             case 1: // 알람 수정 화면에서 복귀 후
                 if (resultCode == RESULT_OK) {    // 알람 수정
+                    alarmTemp = new AlarmItem();
+                    updateAlarmTemp(data);
                     listBack.set(selectedIndex, alarmTemp);
                     listFront.set(selectedIndex, alarmTemp.getInfo());
                 }
@@ -151,6 +145,19 @@ public class MainActivity extends AppCompatActivity {
             listTemp.add(tempTime);
         }
         tvNextAlarm.setText("현재: " + nowTime + "\n알람: " + Collections.min(listTemp).toString());
+    }
+
+    public void updateAlarmTemp (Intent data) {
+        alarmTemp.setTime(data.getIntExtra("hour", 0), data.getIntExtra("minute", 0));
+        for(int i=0; i<7; i++)
+            alarmTemp.setWeek(i, data.getBooleanExtra("week_" + i, false));
+        alarmTemp.setName(data.getStringExtra("name"));
+        alarmTemp.setRingtone(Uri.parse(data.getStringExtra("ringtoneName")), data.getIntExtra("ringtoneVolume", 50));
+        alarmTemp.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
+        for(int i=0; i<3; i++)
+            alarmTemp.setMission(i, data.getBooleanExtra("mission_" + i, false));
+        for(int i=0; i<2; i++)
+            alarmTemp.setPenalty(i, data.getBooleanExtra("penalty_" + i, false));
     }
 
 

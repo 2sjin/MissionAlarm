@@ -55,6 +55,7 @@ public class SetAlarmActivity extends AppCompatActivity {
             }
         });
 
+        // 이벤트: 시크바(볼륨바) 조작 시
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -68,10 +69,16 @@ public class SetAlarmActivity extends AppCompatActivity {
         });
     }
 
+    // Activity 종료 시 알람음(미리 듣기) 종료
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mediaPlayer.release();
+        if( mediaPlayer != null ) {
+            if( mediaPlayer.isPlaying() ) {
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
+        }
     }
 
     // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
@@ -204,9 +211,12 @@ public class SetAlarmActivity extends AppCompatActivity {
         switch(requestCode) {
             case REQUEST_CODE_RINGTONE:
                 if (resultCode == RESULT_OK) {
-                    uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                    tvRingtone.setText(getUriToString(uri));
-                    mediaPlayer = MediaPlayer.create(this, uri);
+                    Uri uriTemp = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    if(uriTemp != null) {
+                        uri = uriTemp;
+                        tvRingtone.setText(getUriToString(uri));
+                        mediaPlayer = MediaPlayer.create(this, uri);
+                    }
                 }
         }
     }
