@@ -27,9 +27,11 @@ public class SetAlarmActivity extends AppCompatActivity {
     CheckBox [] cbPenalty = new CheckBox[PENALTY_SIZE];
     SeekBar volumeBar;
 
+
     Uri uri;
     Ringtone ringtone;
     Vibrator vibrator;
+    AudioManager mAudioManager;
 
     int hour, minute;
     long t1, t2;
@@ -89,12 +91,7 @@ public class SetAlarmActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if( ringtone != null ) {
-            if( ringtone.isPlaying() ) {
-                ringtone.stop();
-                ringtone = null;
-            }
-        }
+        ringtoneRelease();
     }
 
     // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
@@ -174,8 +171,8 @@ public class SetAlarmActivity extends AppCompatActivity {
             timePicker.setHour(hour);
             timePicker.setMinute(minute);
             uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            ringtone = RingtoneManager.getRingtone(getApplicationContext(), uri);
             tvRingtone.setText(getUriToString(uri));
+            getRingtoneIgnoreMute(uri);
         }
         else {    // 알람 수정: 알람 데이터를 가져와서 컴포넌트에 출력
             hour = alarm.hour;
@@ -192,8 +189,8 @@ public class SetAlarmActivity extends AppCompatActivity {
                 cbPenalty[i].setChecked(alarm.penalty[i]);
             volumeBar.setProgress(alarm.ringtoneVolume);
             uri = alarm.ringtoneName;
-            ringtone = RingtoneManager.getRingtone(this, uri);
             tvRingtone.setText(getUriToString(alarm.ringtoneName));
+            getRingtoneIgnoreMute(uri);
         }
     }
 
@@ -217,10 +214,11 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     // 알람 벨소리 선택
     public void setRingtone(View view) {
+        ringtoneRelease();
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER); // 암시적 Intent
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "알람음 선택");  // 제목
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);  // 선택 리스트에 무음 포함 여부
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, false); // 선택 리스트에 기본 벨소리 포함 여부
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);  // 선택 리스트에 무음 포함 여부
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true); // 선택 리스트에 기본 벨소리 포함 여부
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
         startActivityForResult(intent, REQUEST_CODE_RINGTONE); // 벨소리 선택 창을 안드로이드 OS에 요청
     }
@@ -235,15 +233,32 @@ public class SetAlarmActivity extends AppCompatActivity {
                     if(uriTemp != null) {
                         uri = uriTemp;
                         tvRingtone.setText(getUriToString(uri));
-                        ringtone = RingtoneManager.getRingtone(this, uri);
+                        getRingtoneIgnoreMute(uri);
                     }
                 }
+        }
+    }
+
+    // 알람음(미리 듣기) 종료
+    public void ringtoneRelease() {
+        if( ringtone != null ) {
+            if( ringtone.isPlaying() ) {
+                ringtone.stop();
+                ringtone = null;
+            }
         }
     }
 
     // URI를 문자열로 변환
     public String getUriToString(Uri uri) {
         return RingtoneManager.getRingtone(this, uri).getTitle(this);
+    }
+
+    // 진동, 무음 상태에서도 울리는 알람음으로 설정
+    public void getRingtoneIgnoreMute(Uri localUri) {
+        ringtone = RingtoneManager.getRingtone(this, localUri);
+        AudioAttributes audioAttributes = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build();
+        ringtone.setAudioAttributes(audioAttributes);
     }
 
 }
