@@ -2,6 +2,7 @@ package com.example.missionalarm;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -79,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i<7; i++)
             alarmTemp.setWeek(i, data.getBooleanExtra("week_" + i, false));
         alarmTemp.setName(data.getStringExtra("name"));
+        alarmTemp.setRingtone(Uri.parse(data.getStringExtra("ringtoneName")), data.getIntExtra("ringtoneVolume", 50));
         alarmTemp.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
-        alarmTemp.setRingtone(data.getBooleanExtra("ringtone", true));
         for(int i=0; i<3; i++)
             alarmTemp.setMission(i, data.getBooleanExtra("mission_" + i, false));
         for(int i=0; i<2; i++)

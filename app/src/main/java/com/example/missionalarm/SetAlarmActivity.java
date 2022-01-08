@@ -1,8 +1,9 @@
 package com.example.missionalarm;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
-import android.media.RingtoneManager;
+import android.media.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -24,10 +25,15 @@ public class SetAlarmActivity extends AppCompatActivity {
     CheckBox [] cbPenalty = new CheckBox[PENALTY_SIZE];
     SeekBar volumeBar;
 
+    Uri uri;
+    MediaPlayer mediaPlayer;
+    AudioManager am;
+
     int hour, minute;
     long t1, t2;
     static boolean visibleRemoveButton = false;
     static AlarmItem alarm;
+
 
     // Activity 초기 실행
     @Override
@@ -52,13 +58,20 @@ public class SetAlarmActivity extends AppCompatActivity {
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tvRingtone.setText("" + progress + "%");
+                mediaPlayer.start();
+                mediaPlayer.setVolume((float)progress/100, (float)progress/100);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) { }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.release();
     }
 
     // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
@@ -89,13 +102,13 @@ public class SetAlarmActivity extends AppCompatActivity {
         for(int i=0; i<7; i++)
             intent.putExtra("week_" + i, tbWeek[i].isChecked());
         intent.putExtra("name", etName.getText().toString());
+        intent.putExtra("ringtoneName", uri.toString());
+        intent.putExtra("ringtoneVolume", volumeBar.getProgress());
         intent.putExtra("vibration", switchVibration.isChecked());
-        intent.putExtra("ringtone", true);
         for(int i=0; i<MISSION_SIZE; i++)
             intent.putExtra("mission_" + i, cbMission[i].isChecked());
         for(int i=0; i<PENALTY_SIZE; i++)
             intent.putExtra("penalty_" + i, cbPenalty[i].isChecked());
-        intent.putExtra("penalty", "벌칙");
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -151,6 +164,9 @@ public class SetAlarmActivity extends AppCompatActivity {
                 cbMission[i].setChecked(alarm.mission[i]);
             for(int i=0; i<PENALTY_SIZE; i++)
                 cbPenalty[i].setChecked(alarm.penalty[i]);
+            tvRingtone.setText(getUriToString(alarm.ringtoneName));
+            volumeBar.setProgress(alarm.ringtoneVolume);
+            mediaPlayer = MediaPlayer.create(this, alarm.ringtoneName);
         }
     }
 
@@ -188,11 +204,16 @@ public class SetAlarmActivity extends AppCompatActivity {
         switch(requestCode) {
             case REQUEST_CODE_RINGTONE:
                 if (resultCode == RESULT_OK) {
-                    Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                    String ringtoneName = RingtoneManager.getRingtone(this, uri).getTitle(this);
-                    tvRingtone.setText(ringtoneName);
+                    uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    tvRingtone.setText(getUriToString(uri));
+                    mediaPlayer = MediaPlayer.create(this, uri);
                 }
         }
+    }
+
+    // URI를 문자열로 변환
+    public String getUriToString(Uri uri) {
+        return RingtoneManager.getRingtone(this, uri).getTitle(this);
     }
 
 }

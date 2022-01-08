@@ -1,9 +1,12 @@
 package com.example.missionalarm;
 
+import android.net.Uri;
+
 public class AlarmItem {
-    int hour, minute;
+    int hour, minute, ringtoneVolume;
     String name;
-    boolean vibration, ringtone;
+    Uri ringtoneName;
+    boolean vibration;
     boolean [] week = new boolean[7];
     boolean [] mission = new boolean[3];
     boolean [] penalty = new boolean[2];
@@ -13,9 +16,12 @@ public class AlarmItem {
         this.hour = hour;
         this.minute = minute;
     }
+    public void setRingtone(Uri uri, int volume) {
+        this.ringtoneName = uri;
+        this.ringtoneVolume = volume;
+    }
     public void setName(String str) { this.name = str; }
     public void setVibration(boolean boo) { this.vibration = boo; }
-    public void setRingtone(boolean boo) { this.ringtone = boo; }
     public void setWeek(int index, boolean boo) { this.week[index] = boo; }
     public void setMission(int index, boolean boo) { this.mission[index] = boo; }
     public void setPenalty(int index, boolean boo) { this.penalty[index] = boo; }
