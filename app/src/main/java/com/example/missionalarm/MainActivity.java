@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -12,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<AlarmItem> listBack = new ArrayList<>();
 
     ListView listView;
-    TextView tv;
+    TextView tvNextAlarm;
 
     int selectedIndex;
     long t1, t2;
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 레이아웃에서 컴포넌트 ID 가져오기
     public void loadComponentId() {
-        tv = findViewById(R.id.textViewAlarm);
+        tvNextAlarm = findViewById(R.id.tvNextAlarm);
         listView = findViewById(R.id.listView);
     }
 
@@ -118,26 +121,35 @@ public class MainActivity extends AppCompatActivity {
 
     // 다음 알람 새로고침
     public void updateNextAlarm() {
-        int temp;
+        int tempTime, nowTime = 0;
         ArrayList<Integer> listTemp = new ArrayList<>();
+        LocalDateTime t = LocalDateTime.now();
+
+        nowTime += (t.get(ChronoField.DAY_OF_WEEK) + 1) * 10000;
+        nowTime += t.getHour() * 100;
+        nowTime += t.getMinute();
+       // nowTime -= 30000;
+
         if(listBack.size() == 0) {
-            tv.setText("다음 알람 없음");
+            tvNextAlarm.setText("다음 알람 없음");
             return;
         }
+
         listTemp.clear();
         for(int i=0; i<listBack.size(); i++) {
-            temp = 0;
-            temp += listBack.get(i).hour * 100;
-            temp += listBack.get(i).minute;
+            tempTime = 0;
             for(int j=0; j<7; j++) {
                 if(listBack.get(i).week[j] == true) {
-                    temp += j * 10000;
+                    tempTime += (j+1) * 10000;
                     break;
                 }
             }
-            listTemp.add(temp);
+            tempTime += listBack.get(i).hour * 100;
+            tempTime += listBack.get(i).minute;
+
+            listTemp.add(tempTime);
         }
-        tv.setText(Collections.min(listTemp).toString());
+        tvNextAlarm.setText("현재: " + nowTime + "\n알람: " + Collections.min(listTemp).toString());
     }
 
 

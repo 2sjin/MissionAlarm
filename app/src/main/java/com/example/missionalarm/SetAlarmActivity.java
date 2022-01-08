@@ -2,17 +2,19 @@ package com.example.missionalarm;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import java.time.LocalTime;
-import java.util.*;
 
 public class SetAlarmActivity extends AppCompatActivity {
-    final short MISSION_SIZE = 3;
-    final short PENALTY_SIZE = 2;
+    static final int REQUEST_CODE_RINGTONE = 10005;
+    static final int MISSION_SIZE = 3;
+    static final int PENALTY_SIZE = 2;
 
-    TextView tvSelect;
+    TextView tvRingtone;
     TimePicker timePicker;
     Button buttonRemove;
     EditText etName;
@@ -20,6 +22,7 @@ public class SetAlarmActivity extends AppCompatActivity {
     ToggleButton [] tbWeek = new ToggleButton[7];
     CheckBox [] cbMission = new CheckBox[MISSION_SIZE];
     CheckBox [] cbPenalty = new CheckBox[PENALTY_SIZE];
+    SeekBar volumeBar;
 
     int hour, minute;
     long t1, t2;
@@ -44,6 +47,17 @@ public class SetAlarmActivity extends AppCompatActivity {
                 hour = hourChanged;
                 minute = minuteChanged;
             }
+        });
+
+        volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tvRingtone.setText("" + progress + "%");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
     }
 
@@ -95,7 +109,7 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     // 레이아웃에서 컴포넌트 ID 가져오기
     public void loadComponentId() {
-        tvSelect = findViewById(R.id.textViewAlarm);
+        tvRingtone = findViewById(R.id.tvRingtone);
         timePicker = findViewById(R.id.timePicker);
         buttonRemove = findViewById(R.id.buttonRemove);
         etName = findViewById(R.id.etName);
@@ -112,14 +126,15 @@ public class SetAlarmActivity extends AppCompatActivity {
         cbMission[2] = findViewById(R.id.cbMission3);
         cbPenalty[0] = findViewById(R.id.cbPanelty1);
         cbPenalty[1] = findViewById(R.id.cbPanelty2);
+        volumeBar = findViewById(R.id.volumeBar);
     }
 
     // 컴포넌트 초기화
     public void resetComponent() {
         if(alarm == null) {     // 알람 추가: 현재 시각으로 초기화 및 시간 선택기에 출력
-            LocalTime now = LocalTime.now();
-            hour = now.getHour();
-            minute = now.getMinute();
+            LocalTime t = LocalTime.now();
+            hour = t.getHour();
+            minute = t.getMinute();
             timePicker.setHour(hour);
             timePicker.setMinute(minute);
         }
@@ -157,5 +172,27 @@ public class SetAlarmActivity extends AppCompatActivity {
         alarm = a;
     }
 
+    // 알람 벨소리 선택
+    public void setRingtone(View view) {
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER); // 암시적 Intent
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "알람 벨소리를  선택하세요");  // 제목을 넣는다.
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);  // 무음을 선택 리스트에서 제외
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true); // 기본 벨소리는 선택 리스트에 넣는다.
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+        startActivityForResult(intent, REQUEST_CODE_RINGTONE); // 벨소리 선택 창을 안드로이드OS에 요청
+    }
+
+    // 알람 벨소리 선택 후 돌아왔을 때
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        switch(requestCode) {
+            case REQUEST_CODE_RINGTONE:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    String ringtoneName = RingtoneManager.getRingtone(this, uri).getTitle(this);
+                    tvRingtone.setText(ringtoneName);
+                }
+        }
+    }
 
 }

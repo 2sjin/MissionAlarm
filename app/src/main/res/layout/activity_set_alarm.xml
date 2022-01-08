@@ -2,140 +2,101 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SetAlarmActivity"
-    tools:layout_editor_absoluteX="-9dp"
-    tools:layout_editor_absoluteY="8dp">
+    android:orientation="vertical"
+    tools:context=".SetAlarmActivity">
 
     <TimePicker
         android:id="@+id/timePicker"
-        android:layout_width="374dp"
-        android:layout_height="170dp"
-        android:layout_marginTop="52dp"
+        android:layout_width="411dp"
+        android:layout_height="177dp"
+        android:layout_marginTop="50dp"
         android:timePickerMode="spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="410dp"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timePicker">
-
-        <ToggleButton
-            android:id="@+id/tbSunday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textOff="일"
-            android:textOn="[일]" />
-
-        <ToggleButton
-            android:id="@+id/tbMonday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textOff="월"
-            android:textOn="[월]" />
-
-        <ToggleButton
-            android:id="@+id/tbTuesday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textOff="화"
-            android:textOn="[화]" />
-
-        <ToggleButton
-            android:id="@+id/tbWednesday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textOff="수"
-            android:textOn="[수]" />
-
-        <ToggleButton
-            android:id="@+id/tbThrusday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textOff="목"
-            android:textOn="[목]" />
-
-        <ToggleButton
-            android:id="@+id/tbFriday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textOff="금"
-            android:textOn="[금]" />
-
-        <ToggleButton
-            android:id="@+id/tbSaturday"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textOff="토"
-            android:textOn="[토]" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="398dp"
-        android:layout_height="74dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <Button
-            android:id="@+id/buttonAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:onClick="clickedButtonAdd"
-            android:text="저장" />
-
-        <Button
-            android:id="@+id/buttonRemove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:onClick="clickedRemoveCancel"
-            android:text="삭제" />
-
-        <Button
-            android:id="@+id/buttonCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:onClick="clickedButtonCancel"
-            android:text="취소" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:layout_width="407dp"
-        android:layout_height="383dp"
+        android:id="@+id/scrollView"
+        android:layout_width="412dp"
+        android:layout_height="390dp"
         android:scrollbarStyle="outsideOverlay"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/timePicker">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/LayoutWeek"
+                android:layout_width="410dp"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <ToggleButton
+                    android:id="@+id/tbSunday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textOff="일"
+                    android:textOn="[일]" />
+
+                <ToggleButton
+                    android:id="@+id/tbMonday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textOff="월"
+                    android:textOn="[월]" />
+
+                <ToggleButton
+                    android:id="@+id/tbTuesday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textOff="화"
+                    android:textOn="[화]" />
+
+                <ToggleButton
+                    android:id="@+id/tbWednesday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textOff="수"
+                    android:textOn="[수]" />
+
+                <ToggleButton
+                    android:id="@+id/tbThrusday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textOff="목"
+                    android:textOn="[목]" />
+
+                <ToggleButton
+                    android:id="@+id/tbFriday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textOff="금"
+                    android:textOn="[금]" />
+
+                <ToggleButton
+                    android:id="@+id/tbSaturday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textOff="토"
+                    android:textOn="[토]" />
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout"
@@ -151,16 +112,62 @@
                     android:hint="알람 이름" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Switch
-                android:id="@+id/switchVibration"
-                android:layout_width="103dp"
-                android:layout_height="56dp"
-                android:text="진동" />
+            <LinearLayout
+                android:id="@+id/LayoutSound"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvSound"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="알람음" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button"
+                        android:layout_width="62dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:onClick="setRingtone"
+                        android:text="♬" />
+
+                    <TextView
+                        android:id="@+id/tvRingtone"
+                        android:layout_width="252dp"
+                        android:layout_height="wrap_content"
+                        android:text="벨소리 이름" />
+
+                    <Switch
+                        android:id="@+id/switchVibration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="56dp"
+                        android:text="진동" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/volumeBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:max="100" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/LayoutMission"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -215,6 +222,8 @@
                 android:id="@+id/LayoutPenalty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -234,15 +243,16 @@
 
                         <CheckBox
                             android:id="@+id/cbPanelty1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="134dp"
                             android:layout_height="wrap_content"
                             android:text="벌칙1" />
 
                         <CheckBox
                             android:id="@+id/cbPanelty2"
-                            android:layout_width="wrap_content"
+                            android:layout_width="101dp"
                             android:layout_height="wrap_content"
                             android:text="벌칙2" />
+
                     </TableRow>
                 </TableLayout>
 
@@ -250,5 +260,44 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/LayoutButton"
+        android:layout_width="413dp"
+        android:layout_height="99dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:onClick="clickedButtonCancel"
+            android:text="취소" />
+
+        <Button
+            android:id="@+id/buttonRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:onClick="clickedRemoveCancel"
+            android:text="알람 삭제" />
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:onClick="clickedButtonAdd"
+            android:text="저장" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
