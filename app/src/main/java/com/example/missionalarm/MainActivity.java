@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         AlarmItem alarmTemp = new AlarmItem();
         alarmTemp.setTime(data.getIntExtra("hour", 0), data.getIntExtra("minute", 0));
+        for(int i=0; i<7; i++)
+            alarmTemp.setWeek(i, data.getBooleanExtra("week_" + i, false));
         alarmTemp.setName(data.getStringExtra("name"));
         alarmTemp.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
         alarmTemp.setRingtone(data.getBooleanExtra("ringtone", true));

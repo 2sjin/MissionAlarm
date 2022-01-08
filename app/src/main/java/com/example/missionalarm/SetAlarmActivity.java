@@ -14,6 +14,7 @@ public class SetAlarmActivity extends AppCompatActivity {
     Button buttonRemove;
     EditText etName;
     Switch switchVibration;
+    ToggleButton [] tbWeek = new ToggleButton[7];
 
     int hour, minute;
 
@@ -67,6 +68,8 @@ public class SetAlarmActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("hour", hour);
         intent.putExtra("minute", minute);
+        for(int i=0; i<7; i++)
+            intent.putExtra("week_" + i, tbWeek[i].isChecked());
         intent.putExtra("name", etName.getText().toString());
         intent.putExtra("vibration", switchVibration.isChecked());
         intent.putExtra("ringtone", true);
@@ -83,16 +86,6 @@ public class SetAlarmActivity extends AppCompatActivity {
         finish();
     }
 
-    // 삭제 버튼 활성화/비활성화 여부 설정
-    public static void setVisibleRemoveButton(boolean b) {
-        visibleRemoveButton = b;
-    }
-
-    // AlarmItem 객체 가져오기
-    public static void setAlarmItem(AlarmItem a) {
-        alarm = a;
-    }
-
     // 레이아웃에서 컴포넌트 ID 가져오기
     public void loadComponentId() {
         tvSelect = findViewById(R.id.textViewAlarm);
@@ -100,14 +93,13 @@ public class SetAlarmActivity extends AppCompatActivity {
         buttonRemove = findViewById(R.id.buttonRemove);
         etName = findViewById(R.id.etName);
         switchVibration = findViewById(R.id.switchVibration);
-    }
-
-    // [삭제] 버튼의 표시/숨김 여부를 결정
-    public void setVisibleRemoveButton() {
-        if(visibleRemoveButton == true) // 알람 수정
-            buttonRemove.setVisibility(View.VISIBLE);
-        else    // 알람 추가
-            buttonRemove.setVisibility(View.GONE);
+        tbWeek[0] = findViewById(R.id.tbSunday);
+        tbWeek[1] = findViewById(R.id.tbMonday);
+        tbWeek[2] = findViewById(R.id.tbTuesday);
+        tbWeek[3] = findViewById(R.id.tbWednesday);
+        tbWeek[4] = findViewById(R.id.tbThrusday);
+        tbWeek[5] = findViewById(R.id.tbFriday);
+        tbWeek[6] = findViewById(R.id.tbSaturday);
     }
 
     // 컴포넌트 초기화
@@ -126,7 +118,27 @@ public class SetAlarmActivity extends AppCompatActivity {
             timePicker.setMinute(alarm.minute);
             etName.setText(alarm.name);
             switchVibration.setChecked(alarm.vibration);
+            for(int i=0; i<7; i++)
+                tbWeek[i].setChecked(alarm.week[i]);
         }
+    }
+
+    // [삭제] 버튼의 표시/숨김 여부를 결정
+    public void setVisibleRemoveButton() {
+        if(visibleRemoveButton == true) // 알람 수정
+            buttonRemove.setVisibility(View.VISIBLE);
+        else    // 알람 추가
+            buttonRemove.setVisibility(View.GONE);
+    }
+
+    // 삭제 버튼 활성화/비활성화 여부 설정
+    public static void setVisibleRemoveButton(boolean b) {
+        visibleRemoveButton = b;
+    }
+
+    // AlarmItem 객체 가져오기
+    public static void setAlarmItem(AlarmItem a) {
+        alarm = a;
     }
 
 
