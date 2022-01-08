@@ -13,8 +13,9 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listView;
     TextView tv;
+
     int selectedIndex;
-    long t1 = 0, t2 = 0;
+    long t1, t2;
 
     // Activity 초기 실행
     @Override
@@ -22,14 +23,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 컴포넌트 ID 불러오기
-        tv = findViewById(R.id.textViewAlarm);
-        listView = findViewById(R.id.listView);
-
-        // 리스트 새로고침
+        loadComponentId();
         updateList();
-
-
 
         // 리스트의 항목 클릭 시
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -41,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
                 setAlarm();
             }
         });
-
-
     }
 
     // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
@@ -61,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     // 알람 추가 버튼 클릭 시
     public void addAlarm(View view) {
         SetAlarmActivity.setAlarmItem(null);
-        SetAlarmActivity.setVisibleRemove(false);
+        SetAlarmActivity.setVisibleRemoveButton(false);
         Intent intent = new Intent(this, SetAlarmActivity.class);
         startActivityForResult(intent, 0);
     }
@@ -69,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     // 알람 수정
     public void setAlarm() {
         SetAlarmActivity.setAlarmItem(listBack.get(selectedIndex));
-        SetAlarmActivity.setVisibleRemove(true);
+        SetAlarmActivity.setVisibleRemoveButton(true);
         Intent intent = new Intent(this, SetAlarmActivity.class);
         startActivityForResult(intent, 1);
     }
@@ -81,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
         AlarmItem alarmTemp = new AlarmItem();
         alarmTemp.setTime(data.getIntExtra("hour", 0), data.getIntExtra("minute", 0));
         alarmTemp.setName(data.getStringExtra("name"));
-        alarmTemp.setVibration(data.getBooleanExtra("vibration", false));
-        alarmTemp.setBell(data.getBooleanExtra("Bell", true));
+        alarmTemp.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
+        alarmTemp.setRingtone(data.getBooleanExtra("ringtone", true));
         alarmTemp.setMission(data.getStringExtra("mission"));
         alarmTemp.setPenalty(data.getStringExtra("penalty"));
         switch(requestCode) {
@@ -106,11 +99,18 @@ public class MainActivity extends AppCompatActivity {
         updateList();
     }
 
+    // 레이아웃에서 컴포넌트 ID 가져오기
+    public void loadComponentId() {
+        tv = findViewById(R.id.textViewAlarm);
+        listView = findViewById(R.id.listView);
+    }
+
     // 리스트 새로고침
     public void updateList() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listFront);
         listView.setAdapter(adapter);
     }
+
 
 
 }

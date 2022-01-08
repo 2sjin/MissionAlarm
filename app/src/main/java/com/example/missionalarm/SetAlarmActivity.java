@@ -5,26 +5,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
-
-import com.google.android.material.textfield.TextInputEditText;
-
 import java.time.LocalTime;
 import java.util.*;
 
 public class SetAlarmActivity extends AppCompatActivity {
-    List<String> list = new ArrayList<>();
-
-    ListView listView;
     TextView tvSelect;
     TimePicker timePicker;
     Button buttonRemove;
     EditText etName;
+    Switch switchVibration;
 
     int hour, minute;
-    boolean vibration, bell;
 
     long t1, t2;
-    static boolean visibleRemove = false;
+    static boolean visibleRemoveButton = false;
     static AlarmItem alarm;
 
     // Activity 초기 실행
@@ -33,56 +27,12 @@ public class SetAlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
 
-        // 컴포넌트 ID 불러오기
-        tvSelect = findViewById(R.id.textViewAlarm);
-        listView = findViewById(R.id.listView);
-        timePicker = findViewById(R.id.timePicker);
-        buttonRemove = findViewById(R.id.buttonRemove);
-        etName = findViewById(R.id.etName);
+        loadComponentId();
+        setVisibleRemoveButton();
+        timePicker.setIs24HourView(true);   // 시간 선택기를 24시간제로 설정
+        resetComponent();
 
-        // 알람 추가 시에는 [삭제] 버튼 숨기기
-        if(visibleRemove == true)
-            buttonRemove.setVisibility(View.VISIBLE);
-        else
-            buttonRemove.setVisibility(View.GONE);
-
-        // 시간 선택기를 24시간제로 설정
-        timePicker.setIs24HourView(true);
-
-        // 초기화
-        if(alarm == null) {     // 알람 추가: 시간 초기화
-            LocalTime now = LocalTime.now();
-            hour = now.getHour();
-            minute = now.getMinute();
-        }
-        else {    // 알람 수정: 알람 데이터를 가져와서 컴포넌트에 출력
-            hour = alarm.hour;
-            minute = alarm.minute;
-            timePicker.setHour(alarm.hour);
-            timePicker.setMinute(alarm.minute);
-            etName.setText(alarm.name);
-        }
-
-        // 리스트 항목 추가
-        list.add("알람음");
-        list.add("진동");
-        list.add("미션");
-        list.add("벌칙");
-
-        // 리스트 항목 새로고침
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
-        listView.setAdapter(adapter);
-
-        // 아이템 항목을 클릭했을 때
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String data = (String) adapterView.getItemAtPosition(position);
-                tvSelect.setText(data);
-            }
-        });
-
-        // 시간 선택기의 값을 변경했을 때
+        // 이벤트: 시간 선택기의 값을 변경했을 때
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int hourChanged, int minuteChanged) {
@@ -118,8 +68,8 @@ public class SetAlarmActivity extends AppCompatActivity {
         intent.putExtra("hour", hour);
         intent.putExtra("minute", minute);
         intent.putExtra("name", etName.getText().toString());
-        intent.putExtra("vibration", vibration);
-        intent.putExtra("bell", bell);
+        intent.putExtra("vibration", switchVibration.isChecked());
+        intent.putExtra("ringtone", true);
         intent.putExtra("mission", "미션");
         intent.putExtra("penalty", "벌칙");
         setResult(RESULT_OK, intent);
@@ -133,12 +83,51 @@ public class SetAlarmActivity extends AppCompatActivity {
         finish();
     }
 
-    public static void setVisibleRemove(boolean b) {
-        visibleRemove = b;
+    // 삭제 버튼 활성화/비활성화 여부 설정
+    public static void setVisibleRemoveButton(boolean b) {
+        visibleRemoveButton = b;
     }
 
+    // AlarmItem 객체 가져오기
     public static void setAlarmItem(AlarmItem a) {
         alarm = a;
     }
+
+    // 레이아웃에서 컴포넌트 ID 가져오기
+    public void loadComponentId() {
+        tvSelect = findViewById(R.id.textViewAlarm);
+        timePicker = findViewById(R.id.timePicker);
+        buttonRemove = findViewById(R.id.buttonRemove);
+        etName = findViewById(R.id.etName);
+        switchVibration = findViewById(R.id.switchVibration);
+    }
+
+    // [삭제] 버튼의 표시/숨김 여부를 결정
+    public void setVisibleRemoveButton() {
+        if(visibleRemoveButton == true) // 알람 수정
+            buttonRemove.setVisibility(View.VISIBLE);
+        else    // 알람 추가
+            buttonRemove.setVisibility(View.GONE);
+    }
+
+    // 컴포넌트 초기화
+    public void resetComponent() {
+        if(alarm == null) {     // 알람 추가: 현재 시각으로 초기화 및 시간 선택기에 출력
+            LocalTime now = LocalTime.now();
+            hour = now.getHour();
+            minute = now.getMinute();
+            timePicker.setHour(hour);
+            timePicker.setMinute(minute);
+        }
+        else {    // 알람 수정: 알람 데이터를 가져와서 컴포넌트에 출력
+            hour = alarm.hour;
+            minute = alarm.minute;
+            timePicker.setHour(alarm.hour);
+            timePicker.setMinute(alarm.minute);
+            etName.setText(alarm.name);
+            switchVibration.setChecked(alarm.vibration);
+        }
+    }
+
 
 }
