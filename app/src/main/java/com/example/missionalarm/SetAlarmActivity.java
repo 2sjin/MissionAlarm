@@ -7,6 +7,7 @@ import android.media.*;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.*;
 import java.time.LocalTime;
@@ -28,7 +29,7 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     Uri uri;
     Ringtone ringtone;
-    AudioManager am;
+    Vibrator vibrator;
 
     int hour, minute;
     long t1, t2;
@@ -44,6 +45,7 @@ public class SetAlarmActivity extends AppCompatActivity {
 
         loadComponentId();
         setVisibleRemoveButton();
+        vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);    // 진동 권한 획득
         timePicker.setIs24HourView(true);   // 시간 선택기를 24시간제로 설정
         resetComponent();
 
@@ -69,6 +71,17 @@ public class SetAlarmActivity extends AppCompatActivity {
             public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        // 이벤트: 진동 스위치 조작 시
+        switchVibration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true)
+                    vibrator.vibrate(1000);
+                else
+                    vibrator.cancel();
+            }
         });
     }
 
@@ -205,11 +218,11 @@ public class SetAlarmActivity extends AppCompatActivity {
     // 알람 벨소리 선택
     public void setRingtone(View view) {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER); // 암시적 Intent
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "알람 벨소리를  선택하세요");  // 제목을 넣는다.
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);  // 무음을 선택 리스트에서 제외
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true); // 기본 벨소리는 선택 리스트에 넣는다.
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "알람음 선택");  // 제목
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);  // 선택 리스트에 무음 포함 여부
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, false); // 선택 리스트에 기본 벨소리 포함 여부
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
-        startActivityForResult(intent, REQUEST_CODE_RINGTONE); // 벨소리 선택 창을 안드로이드OS에 요청
+        startActivityForResult(intent, REQUEST_CODE_RINGTONE); // 벨소리 선택 창을 안드로이드 OS에 요청
     }
 
     // 알람 벨소리 선택 후 돌아왔을 때
