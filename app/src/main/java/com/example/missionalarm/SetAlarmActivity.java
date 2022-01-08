@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.media.*;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -26,7 +27,7 @@ public class SetAlarmActivity extends AppCompatActivity {
     SeekBar volumeBar;
 
     Uri uri;
-    MediaPlayer mediaPlayer;
+    Ringtone ringtone;
     AudioManager am;
 
     int hour, minute;
@@ -59,8 +60,10 @@ public class SetAlarmActivity extends AppCompatActivity {
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mediaPlayer.start();
-                mediaPlayer.setVolume((float)progress/100, (float)progress/100);
+                ringtone.play();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    ringtone.setVolume((float)progress / 100.0f);
+                }
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) { }
@@ -73,10 +76,10 @@ public class SetAlarmActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if( mediaPlayer != null ) {
-            if( mediaPlayer.isPlaying() ) {
-                mediaPlayer.release();
-                mediaPlayer = null;
+        if( ringtone != null ) {
+            if( ringtone.isPlaying() ) {
+                ringtone.stop();
+                ringtone = null;
             }
         }
     }
@@ -157,6 +160,9 @@ public class SetAlarmActivity extends AppCompatActivity {
             minute = t.getMinute();
             timePicker.setHour(hour);
             timePicker.setMinute(minute);
+            uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            ringtone = RingtoneManager.getRingtone(getApplicationContext(), uri);
+            tvRingtone.setText(getUriToString(uri));
         }
         else {    // 알람 수정: 알람 데이터를 가져와서 컴포넌트에 출력
             hour = alarm.hour;
@@ -171,9 +177,10 @@ public class SetAlarmActivity extends AppCompatActivity {
                 cbMission[i].setChecked(alarm.mission[i]);
             for(int i=0; i<PENALTY_SIZE; i++)
                 cbPenalty[i].setChecked(alarm.penalty[i]);
-            tvRingtone.setText(getUriToString(alarm.ringtoneName));
             volumeBar.setProgress(alarm.ringtoneVolume);
-            mediaPlayer = MediaPlayer.create(this, alarm.ringtoneName);
+            uri = alarm.ringtoneName;
+            ringtone = RingtoneManager.getRingtone(this, uri);
+            tvRingtone.setText(getUriToString(alarm.ringtoneName));
         }
     }
 
@@ -215,7 +222,7 @@ public class SetAlarmActivity extends AppCompatActivity {
                     if(uriTemp != null) {
                         uri = uriTemp;
                         tvRingtone.setText(getUriToString(uri));
-                        mediaPlayer = MediaPlayer.create(this, uri);
+                        ringtone = RingtoneManager.getRingtone(this, uri);
                     }
                 }
         }
