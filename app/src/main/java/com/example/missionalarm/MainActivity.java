@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 selectedIndex = position;
                 String data = (String) adapterView.getItemAtPosition(selectedIndex);
-                tv.setText(data);
                 setAlarm();
             }
         });
@@ -78,8 +77,10 @@ public class MainActivity extends AppCompatActivity {
         alarmTemp.setName(data.getStringExtra("name"));
         alarmTemp.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
         alarmTemp.setRingtone(data.getBooleanExtra("ringtone", true));
-        alarmTemp.setMission(data.getStringExtra("mission"));
-        alarmTemp.setPenalty(data.getStringExtra("penalty"));
+        for(int i=0; i<3; i++)
+            alarmTemp.setMission(i, data.getBooleanExtra("mission_" + i, false));
+        for(int i=0; i<2; i++)
+            alarmTemp.setPenalty(i, data.getBooleanExtra("penalty_" + i, false));
         switch(requestCode) {
             case 0: // 알람 추가 화면에서 복귀 후
                 if (resultCode == RESULT_OK) {

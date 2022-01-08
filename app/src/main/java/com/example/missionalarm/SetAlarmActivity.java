@@ -9,15 +9,19 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class SetAlarmActivity extends AppCompatActivity {
+    final short MISSION_SIZE = 3;
+    final short PENALTY_SIZE = 2;
+
     TextView tvSelect;
     TimePicker timePicker;
     Button buttonRemove;
     EditText etName;
     Switch switchVibration;
     ToggleButton [] tbWeek = new ToggleButton[7];
+    CheckBox [] cbMission = new CheckBox[MISSION_SIZE];
+    CheckBox [] cbPenalty = new CheckBox[PENALTY_SIZE];
 
     int hour, minute;
-
     long t1, t2;
     static boolean visibleRemoveButton = false;
     static AlarmItem alarm;
@@ -73,7 +77,10 @@ public class SetAlarmActivity extends AppCompatActivity {
         intent.putExtra("name", etName.getText().toString());
         intent.putExtra("vibration", switchVibration.isChecked());
         intent.putExtra("ringtone", true);
-        intent.putExtra("mission", "미션");
+        for(int i=0; i<MISSION_SIZE; i++)
+            intent.putExtra("mission_" + i, cbMission[i].isChecked());
+        for(int i=0; i<PENALTY_SIZE; i++)
+            intent.putExtra("penalty_" + i, cbPenalty[i].isChecked());
         intent.putExtra("penalty", "벌칙");
         setResult(RESULT_OK, intent);
         finish();
@@ -100,6 +107,11 @@ public class SetAlarmActivity extends AppCompatActivity {
         tbWeek[4] = findViewById(R.id.tbThrusday);
         tbWeek[5] = findViewById(R.id.tbFriday);
         tbWeek[6] = findViewById(R.id.tbSaturday);
+        cbMission[0] = findViewById(R.id.cbMission1);
+        cbMission[1] = findViewById(R.id.cbMission2);
+        cbMission[2] = findViewById(R.id.cbMission3);
+        cbPenalty[0] = findViewById(R.id.cbPanelty1);
+        cbPenalty[1] = findViewById(R.id.cbPanelty2);
     }
 
     // 컴포넌트 초기화
@@ -120,6 +132,10 @@ public class SetAlarmActivity extends AppCompatActivity {
             switchVibration.setChecked(alarm.vibration);
             for(int i=0; i<7; i++)
                 tbWeek[i].setChecked(alarm.week[i]);
+            for(int i=0; i<MISSION_SIZE; i++)
+                cbMission[i].setChecked(alarm.mission[i]);
+            for(int i=0; i<PENALTY_SIZE; i++)
+                cbPenalty[i].setChecked(alarm.penalty[i]);
         }
     }
 
