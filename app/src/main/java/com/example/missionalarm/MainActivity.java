@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.*;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     AlarmItem alarmTemp;
     int selectedIndex;
     long t1, t2;
+    String textNoAlarm = "활성화된 알람이\n없습니다.";
 
     // Activity 초기 실행
     @Override
@@ -116,37 +116,71 @@ public class MainActivity extends AppCompatActivity {
 
     // 다음 알람 새로고침
     public void updateNextAlarm() {
-        int tempTime, nowTime = 0;
+        int codeNowWeek, codeNowTime, codeTempWeek, codeTempTime, codeNextAlarm;
         ArrayList<Integer> listTemp = new ArrayList<>();
         LocalDateTime t = LocalDateTime.now();
 
-        nowTime += (t.get(ChronoField.DAY_OF_WEEK) + 1) * 10000;
-        nowTime += t.getHour() * 100;
-        nowTime += t.getMinute();
-       // nowTime -= 30000;
+        // 현재 요일과 시간 구하기, 일요일 시작으로 변경 (1=일, ..., 7=토)
+        codeNowWeek = t.getDayOfWeek().getValue();
+        if(codeNowWeek == 7)
+            codeNowWeek = 1;
+        else
+            codeNowWeek += 1;
+        codeNowTime = (t.getHour() * 100) + t.getMinute();
 
+        // 활성화된 알람이 없을 경우
         if(listBack.size() == 0) {
-            tvNextAlarm.setText("다음 알람 없음");
+            tvNextAlarm.setText(textNoAlarm);
             return;
         }
 
+        // 활성화된 알람을 리스트에 추가
         listTemp.clear();
+        codeTempWeek = 0;
         for(int i=0; i<listBack.size(); i++) {
-            tempTime = 0;
-            for(int j=0; j<7; j++) {
-                if(listBack.get(i).week[j] == true) {
-                    tempTime += (j+1) * 10000;
+            for(int cntWeek=0; cntWeek<7; cntWeek++) {
+                if(listBack.get(i).week[cntWeek] == true) {
+                    codeTempWeek = cntWeek + 1;
                     break;
                 }
             }
-            tempTime += listBack.get(i).hour * 100;
-            tempTime += listBack.get(i).minute;
-
-            listTemp.add(tempTime);
+            codeTempTime = (listBack.get(i).hour * 100) + listBack.get(i).minute;
+            if(codeTempWeek <= 0)
+                codeTempWeek = -99;
+            else if(codeTempTime <= codeTempTime)
+                codeTempWeek += 7;
+            listTemp.add((codeTempWeek * 10000) + codeTempTime);
         }
-        tvNextAlarm.setText("현재: " + nowTime + "\n알람: " + Collections.min(listTemp).toString());
+
+        // 리스트에서 최소값 구하기
+        codeNextAlarm = Collections.min(listTemp);
+
+        // 최대값 보정
+        if(codeNextAlarm >= 90000) {
+            codeNextAlarm -= 70000;
+        }
+
+        // 알람이 얼마 후에 울리는지 계산
+        int diffDay = (codeNextAlarm / 10000) - codeNowWeek;
+        int diffHour = (codeNextAlarm % 10000 / 100 ) - (codeNowTime / 100);
+        int diffMinute = (codeNextAlarm % 100) - (codeNowTime % 100);
+        if(diffMinute < 0) {
+            diffMinute += 60;
+            diffHour--;
+        }
+        if(diffHour < 0) {
+            diffHour += 24;
+            diffDay--;
+        }
+
+        // 알람이 얼마 후에 올리는지 표시
+        if(diffDay >= 0)
+            tvNextAlarm.setText(diffDay + "일 " + diffHour + "시간 " + diffMinute + "분 후에\n알람이 울립니다.");
+        else
+            tvNextAlarm.setText(textNoAlarm);
     }
 
+    // 알람 객체 새로고침
     public void updateAlarmTemp (Intent data) {
         alarmTemp.setTime(data.getIntExtra("hour", 0), data.getIntExtra("minute", 0));
         for(int i=0; i<7; i++)
@@ -159,6 +193,5 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i<2; i++)
             alarmTemp.setPenalty(i, data.getBooleanExtra("penalty_" + i, false));
     }
-
 
 }
