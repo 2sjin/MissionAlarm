@@ -1,12 +1,14 @@
 package com.example.missionalarm;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         updateList();
         updateNextAlarm();
 
-        // 리스트의 항목 클릭 시
+        // 리스트의 항목 클릭 시(알람 수정)
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -41,6 +43,42 @@ public class MainActivity extends AppCompatActivity {
                 setAlarm();
             }
         });
+
+        // 리스트의 항목 길게 클릭 시(알람 삭제)
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                selectedIndex = position;
+                AlertDialog.Builder ad = new AlertDialog.Builder(MainActivity.this);
+                ad.setTitle("알람 삭제");
+                ad.setMessage("알람을 삭제하시겠습니까?");
+
+                // 이벤트: [삭제] 버튼을 눌렀을 때
+                ad.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        listBack.remove(selectedIndex);
+                        listFront.remove(selectedIndex);
+                        updateList();
+                        updateNextAlarm();
+                        dialog.dismiss();
+                    }
+                });
+                
+                // 이벤트: [취소] 버튼을 눌렀을 때
+                ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                // 다이얼로그 출력
+                ad.show();
+                return true;
+            }
+        });
+
     }
 
     // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
@@ -59,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
     // 알람 추가 버튼 클릭 시
     public void addAlarm(View view) {
         SetAlarmActivity.setAlarmItem(null);
-        SetAlarmActivity.setVisibleRemoveButton(false);
         Intent intent = new Intent(this, SetAlarmActivity.class);
         startActivityForResult(intent, 0);
     }
@@ -67,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
     // 알람 수정
     public void setAlarm() {
         SetAlarmActivity.setAlarmItem(listBack.get(selectedIndex));
-        SetAlarmActivity.setVisibleRemoveButton(true);
         Intent intent = new Intent(this, SetAlarmActivity.class);
         startActivityForResult(intent, 1);
     }
@@ -91,10 +127,6 @@ public class MainActivity extends AppCompatActivity {
                     updateAlarmTemp(data);
                     listBack.set(selectedIndex, alarmTemp);
                     listFront.set(selectedIndex, alarmTemp.getInfo());
-                }
-                else if(resultCode == -4) {   // 알람 삭제
-                    listBack.remove(selectedIndex);
-                    listFront.remove(selectedIndex);
                 }
                 break;
         }

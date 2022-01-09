@@ -30,6 +30,8 @@
         android:background="@color/purple_500"
         android:fontStyle="normal"
         android:fontWeight="400"
+        android:paddingHorizontal="30dp"
+        android:paddingVertical="20dp"
         android:text="모든 알람이 꺼진\n상태입니다"
         android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,26 +41,16 @@
 
     <Button
         android:id="@+id/buttonAddAlarm"
-        android:layout_width="64dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="264dp"
-        android:layout_marginBottom="12dp"
+        android:layout_width="106dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="20dp"
         android:background="#000000"
         android:onClick="addAlarm"
-        android:text="+"
+        android:text="추가"
         app:layout_constraintBottom_toBottomOf="@+id/tvNextAlarm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.948"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="64dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="12dp"
-        android:background="#000000"
-        android:text="..."
-        app:layout_constraintBottom_toBottomOf="@+id/tvNextAlarm"
-        app:layout_constraintStart_toEndOf="@+id/buttonAddAlarm" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

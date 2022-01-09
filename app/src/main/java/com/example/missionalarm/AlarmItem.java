@@ -26,6 +26,7 @@ public class AlarmItem {
     public void setMission(int index, boolean boo) { this.mission[index] = boo; }
     public void setPenalty(int index, boolean boo) { this.penalty[index] = boo; }
 
+    // 알람 정보를 문자열로 리턴(문자열)
     public String getInfo() {
         int count = 0;
         String[] weekStr = {"일", "월", "화", "수", "목", "금", "토"};

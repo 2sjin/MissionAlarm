@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.media.*;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Vibrator;
+import android.os.*;
 import android.view.View;
 import android.widget.*;
 import java.time.LocalTime;
@@ -19,14 +17,12 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     TextView tvRingtone;
     TimePicker timePicker;
-    Button buttonRemove;
     EditText etName;
     Switch switchVibration;
     ToggleButton [] tbWeek = new ToggleButton[7];
     CheckBox [] cbMission = new CheckBox[MISSION_SIZE];
     CheckBox [] cbPenalty = new CheckBox[PENALTY_SIZE];
     SeekBar volumeBar;
-
 
     Uri uri;
     Ringtone ringtone;
@@ -35,9 +31,7 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     int hour, minute;
     long t1, t2;
-    static boolean visibleRemoveButton = false;
     static AlarmItem alarm;
-
 
     // Activity 초기 실행
     @Override
@@ -46,7 +40,6 @@ public class SetAlarmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_set_alarm);
 
         loadComponentId();
-        setVisibleRemoveButton();
         vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);    // 진동 권한 획득
         timePicker.setIs24HourView(true);   // 시간 선택기를 24시간제로 설정
         resetComponent();
@@ -133,18 +126,10 @@ public class SetAlarmActivity extends AppCompatActivity {
         finish();
     }
 
-    // [삭제] 버튼을 눌렀을 때
-    public void clickedRemoveCancel(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-        setResult(-4, intent);
-        finish();
-    }
-
     // 레이아웃에서 컴포넌트 ID 가져오기
     public void loadComponentId() {
         tvRingtone = findViewById(R.id.tvRingtone);
         timePicker = findViewById(R.id.timePicker);
-        buttonRemove = findViewById(R.id.buttonRemove);
         etName = findViewById(R.id.etName);
         switchVibration = findViewById(R.id.switchVibration);
         tbWeek[0] = findViewById(R.id.tbSunday);
@@ -192,19 +177,6 @@ public class SetAlarmActivity extends AppCompatActivity {
             tvRingtone.setText(getUriToString(alarm.ringtoneName));
             getRingtoneIgnoreMute(uri);
         }
-    }
-
-    // [삭제] 버튼의 표시/숨김 여부를 결정
-    public void setVisibleRemoveButton() {
-        if(visibleRemoveButton == true) // 알람 수정
-            buttonRemove.setVisibility(View.VISIBLE);
-        else    // 알람 추가
-            buttonRemove.setVisibility(View.GONE);
-    }
-
-    // 삭제 버튼 활성화/비활성화 여부 설정
-    public static void setVisibleRemoveButton(boolean b) {
-        visibleRemoveButton = b;
     }
 
     // AlarmItem 객체 가져오기
