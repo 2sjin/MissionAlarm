@@ -150,7 +150,8 @@ public class MainActivity extends AppCompatActivity {
     public void updateNextAlarm() {
         List<Integer> listTimeCode = new ArrayList<>();
         LocalDateTime tNow = LocalDateTime.now();
-        int timeCode;
+        boolean allWeekisDisabled = false;
+        int timeCode, weekCount;
         int timeCodeNow = (tNow.getDayOfWeek().getValue() * 10000) + (tNow.getHour() * 100) + tNow.getMinute();
 
         // 활성화된 알람이 없을 경우
@@ -167,11 +168,19 @@ public class MainActivity extends AppCompatActivity {
 
         // ArrayList에 알람 추가
         for(int i=0; i<listBack.size(); i++) {
+            weekCount = 0;
+            allWeekisDisabled = false;
             for(int j=0; j<7; j++) {
                 if(listBack.get(i).week[j] == true) {
                     timeCode = ((j+1) * 10000) + (listBack.get(i).hour * 100) + listBack.get(i).minute;
                     listTimeCode.add(timeCode);
+                    weekCount++;
                 }
+            }
+            if(weekCount <= 0) {
+                timeCode = ((timeCodeNow / 10000) * 10000) + (listBack.get(i).hour * 100) + listBack.get(i).minute;
+                listTimeCode.add(timeCode);
+                allWeekisDisabled = true;
             }
         }
         Collections.sort(listTimeCode); // ArrayList 정렬
@@ -201,7 +210,10 @@ public class MainActivity extends AppCompatActivity {
             diffDay--;
         }
         if(diffDay < 0) {
-            diffDay += 7;
+            if(allWeekisDisabled == true)
+                diffDay += 1;
+            else
+                diffDay += 7;
         }
 
         // 다음 알람까지 남은 시간 출력
