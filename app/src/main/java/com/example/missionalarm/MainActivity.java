@@ -2,10 +2,17 @@ package com.example.missionalarm;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -19,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     TextView tvNextAlarm;
 
+    AlarmManager alarmManager;
     AlarmItem alarmTemp;
     int selectedIndex;
     long t1, t2;
@@ -30,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        
+
+        regist();
         loadComponentId();
         updateList();
         updateNextAlarm();
@@ -78,8 +89,38 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            tvNextAlarm.setText("하이");
+        }
+    }
+
+    public void regist() {
+        alarmManager = (AlarmManager)getSystemService (Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, 2, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pIntent);
+    }
+
+    public void unregist(View view) {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        alarmManager.cancel(pIntent);
+    }
+
 
     // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
     @Override
