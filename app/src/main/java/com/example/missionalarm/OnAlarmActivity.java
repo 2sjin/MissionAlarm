@@ -34,7 +34,7 @@ public class OnAlarmActivity extends AppCompatActivity {
         // 텍스트뷰 설정
         loadComponentId();
         tvOnAlarmName.setText(alarm.name);
-        tvOnAlarmTime.setText(alarm.hour + ":" + alarm.minute);
+        tvOnAlarmTime.setText(String.format("%02d:%02d", alarm.hour, alarm.minute));
 
         // 다른 알람음 및 진동 끄기
         vibrator.cancel();

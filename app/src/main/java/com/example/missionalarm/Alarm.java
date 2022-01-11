@@ -43,7 +43,7 @@ public class Alarm implements Serializable {
         if(count == 7)
             returnStr = returnStr.concat("매일");
         else if(count == 0)
-            returnStr = returnStr.concat("반복 없음");
+            returnStr = returnStr.concat("OFF");
         else {
             for(int i=0; i<7; i++) {
                 if (week[i] == true)

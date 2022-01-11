@@ -33,18 +33,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/LayoutWeekButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buttonDaily"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="200dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:onClick="allOnToggleButtonWeek"
+                    android:text="매일"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/buttonOff"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:onClick="allOffToggleButtonWeek"
+                    android:text="알람 끄기"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/LayoutWeek"
                 android:layout_width="410dp"
                 android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
                 <ToggleButton
                     android:id="@+id/tbSunday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:checked="true"
                     android:textOff="일"
@@ -52,8 +85,8 @@
 
                 <ToggleButton
                     android:id="@+id/tbMonday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:checked="true"
                     android:textOff="월"
@@ -61,8 +94,8 @@
 
                 <ToggleButton
                     android:id="@+id/tbTuesday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:checked="true"
                     android:textOff="화"
@@ -70,8 +103,8 @@
 
                 <ToggleButton
                     android:id="@+id/tbWednesday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:checked="true"
                     android:textOff="수"
@@ -79,8 +112,8 @@
 
                 <ToggleButton
                     android:id="@+id/tbThrusday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:checked="true"
                     android:textOff="목"
@@ -88,8 +121,8 @@
 
                 <ToggleButton
                     android:id="@+id/tbFriday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:checked="true"
                     android:textOff="금"
@@ -97,8 +130,8 @@
 
                 <ToggleButton
                     android:id="@+id/tbSaturday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:checked="true"
                     android:textOff="토"
@@ -113,7 +146,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etName"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="50dp"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:hint="알람 이름" />
@@ -141,15 +174,17 @@
 
                     <Button
                         android:id="@+id/button"
-                        android:layout_width="62dp"
+                        android:layout_width="52dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
                         android:layout_marginRight="10dp"
                         android:onClick="setRingtone"
-                        android:text="♬" />
+                        android:text="♬"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tvRingtone"
-                        android:layout_width="252dp"
+                        android:layout_width="268dp"
                         android:layout_height="wrap_content"
                         android:text="벨소리 이름" />
 
@@ -286,6 +321,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:onClick="clickedButtonCancel"
+            android:textSize="20sp"
             android:text="취소" />
 
         <Button
@@ -295,6 +331,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:onClick="clickedButtonAdd"
+            android:textSize="20sp"
             android:text="저장" />
 
     </LinearLayout>

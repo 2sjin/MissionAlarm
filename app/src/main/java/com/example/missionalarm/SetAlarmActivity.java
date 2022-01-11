@@ -225,4 +225,17 @@ public class SetAlarmActivity extends AppCompatActivity {
         ringtone.setAudioAttributes(audioAttributes);
     }
 
+    // 모든 요일 토글 버튼 켜기
+    public void allOnToggleButtonWeek(View view) {
+        for(int i=0; i<7; i++)
+            tbWeek[i].setChecked(true);
+    }
+
+    // 모든 요일 토글 버튼 끄기
+    public void allOffToggleButtonWeek(View view) {
+        for(int i=0; i<7; i++)
+            tbWeek[i].setChecked(false);
+    }
+
+
 }

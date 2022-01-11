@@ -61,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         listBack.remove(selectedIndex);
                         listFront.remove(selectedIndex);
+                        unregistAlarm();
                         updateList();
                         updateNextAlarm();
-                        unregistAlarm();
                         dialog.dismiss();
                     }
                 });
@@ -91,20 +91,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 알람매니저에 알람 등록
-    public void registAlarm(int week, int hour, int minute) {
+    public void registAlarm(int day, int hour, int minute) {
         alarmManager = (AlarmManager)getSystemService (Context.ALARM_SERVICE);
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, week);
+        calendar.set(Calendar.DAY_OF_WEEK, day);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pIntent);
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
     }
 
     // 알람 매니저에서 알람 삭제
@@ -188,10 +188,10 @@ public class MainActivity extends AppCompatActivity {
         List<Integer> listKeysSorted = new ArrayList<>();
         LocalDateTime tNow = LocalDateTime.now();
         boolean allWeekisDisabled = false;
-        int timeCode, weekCount;
+        int timeCode;
         int timeCodeNow = (tNow.getDayOfWeek().getValue() * 10000) + (tNow.getHour() * 100) + tNow.getMinute();
 
-        // 활성화된 알람이 없을 경우
+        // 추가한 알람이 없을 경우
         if(listBack.size() == 0) {
             tvNextAlarm.setText(textNoAlarm);
             return;
@@ -205,21 +205,22 @@ public class MainActivity extends AppCompatActivity {
 
         // ArrayList에 알람 추가
         for(int i=0; i<listBack.size(); i++) {
-            weekCount = 0;
             allWeekisDisabled = false;
             for(int j=0; j<7; j++) {
                 if(listBack.get(i).week[j] == true) {
                     timeCode = ((j+1) * 10000) + (listBack.get(i).hour * 100) + listBack.get(i).minute;
                     hashMapAlarm.put(timeCode, listBack.get(i));
-                    weekCount++;
                 }
             }
-            if(weekCount <= 0) {
-                timeCode = ((timeCodeNow / 10000) * 10000) + (listBack.get(i).hour * 100) + listBack.get(i).minute;
-                hashMapAlarm.put(timeCode, listBack.get(i));
-                allWeekisDisabled = true;
-            }
         }
+
+        // 모든 알람이 바활성화(요일 미선택) 상태일 경우
+        if(hashMapAlarm.size() == 0) {
+            tvNextAlarm.setText(textNoAlarm);
+            unregistAlarm();
+            return;
+        }
+
 
         // 해시맵의 키 값을 ArrayList에 저장
         Set<Integer> setKeys = hashMapAlarm.keySet();
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         registAlarm(codeIndexZero / 10000, codeIndexZero / 100 % 100, codeIndexZero % 100);
 
         // onAlarmActivity에 데이터 전달을 위해 객체 저장
-        alarmObjectForOnAlarm = alarmObject;
+        alarmObjectForOnAlarm = hashMapAlarmSorted.get(codeIndexZero);
 
         // 다음 알람까지 얼마나 남았는지 일(Day), 시간(Hour), 분(Minute) 단위로 계산
         int diffDay = (codeIndexZero / 10000) - (timeCodeNow / 10000);
