@@ -2,15 +2,21 @@ package com.example.missionalarm;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.Vibrator;
+import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class OnAlarmActivity extends AppCompatActivity {
     TextView tvOnAlarmName;
@@ -20,13 +26,30 @@ public class OnAlarmActivity extends AppCompatActivity {
     Vibrator vibrator;
     long[] pattern = {100, 1000};
 
+    PowerManager powerManager;
+    PowerManager.WakeLock wakeLock;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_alarm);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // 화면 자동꺼짐 방지
-        vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);    // 진동 권한 획득
+        // 진동 권한 획득
+        vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+
+        // 화면 자동꺼짐 방지
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // 꺼진 화면 깨우기
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
+                | PowerManager.ACQUIRE_CAUSES_WAKEUP
+                | PowerManager.ON_AFTER_RELEASE,"WAKE:LOCK");
+        wakeLock.acquire(); // WakeLock 깨우기
 
         // MainActivity에서 알람 객체 가져오기
         alarm = MainActivity.alarmObjectForOnAlarm;
@@ -40,7 +63,6 @@ public class OnAlarmActivity extends AppCompatActivity {
         vibrator.cancel();
         ringtoneRelease();
 
-
         // 알람음 재생
         ringtonePlay();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
@@ -51,10 +73,26 @@ public class OnAlarmActivity extends AppCompatActivity {
             vibrator.vibrate(pattern, 0);
     }
 
+
+
+    // 특수 키 입력 방지
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                setVolumeControlStream(AudioManager.ERROR);
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    @Override public void onBackPressed() { return; }
+
     // [알람 끄기] 버튼을 눌렀을 때
     public void clickedButtonOff(View view) {
         vibrator.cancel();
         ringtoneRelease();
+        wakeLock.release(); // WakeLock 해제
         finish();
     }
 
