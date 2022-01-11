@@ -13,11 +13,10 @@ import androidx.appcompat.app.AlertDialog;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "★★★★★★★★★★★★★★★★★★★★★", Toast.LENGTH_LONG).show();    // AVD 확인용
+        Toast.makeText(context, "알람 시간입니다.", Toast.LENGTH_LONG).show();    // AVD 확인용
 
-        Intent i = new Intent(context, OnAlarmActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("AlarmForActivity", intent.getBooleanExtra("AlarmForReceiver", false));
-        context.startActivity(i);
+        Intent localIntent = new Intent(context, OnAlarmActivity.class);
+        localIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(localIntent);
     }
 }

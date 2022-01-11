@@ -6,9 +6,9 @@ import java.io.Serializable;
 
 public class Alarm implements Serializable {
     private static final long serialVersionUID = 1L;
-    int hour, minute, ringtoneVolume, num;
+    int hour, minute, ringtoneVolume;
     String name;
-    Uri ringtoneName;
+    Uri ringtoneUri;
     boolean vibration;
     boolean [] week = new boolean[7];
     boolean [] mission = new boolean[3];
@@ -20,7 +20,7 @@ public class Alarm implements Serializable {
         this.minute = minute;
     }
     public void setRingtone(Uri uri, int volume) {
-        this.ringtoneName = uri;
+        this.ringtoneUri = uri;
         this.ringtoneVolume = volume;
     }
     public void setName(String str) { this.name = str; }

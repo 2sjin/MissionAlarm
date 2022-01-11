@@ -30,8 +30,7 @@ public class SetAlarmActivity extends AppCompatActivity {
     AudioManager mAudioManager;
 
     int hour, minute;
-    long t1, t2;
-    static Alarm alarm;
+    static Alarm alarmObject;
 
     // Activity 초기 실행
     @Override
@@ -142,7 +141,7 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     // 컴포넌트 초기화
     public void resetComponent() {
-        if(alarm == null) {     // 알람 추가: 현재 시각으로 초기화 및 시간 선택기에 출력
+        if(alarmObject == null) {     // 알람 추가: 현재 시각으로 초기화 및 시간 선택기에 출력
             LocalTime t = LocalTime.now();
             hour = t.getHour();
             minute = t.getMinute();
@@ -153,28 +152,28 @@ public class SetAlarmActivity extends AppCompatActivity {
             getRingtoneIgnoreMute(uri);
         }
         else {    // 알람 수정: 알람 데이터를 가져와서 컴포넌트에 출력
-            hour = alarm.hour;
-            minute = alarm.minute;
-            timePicker.setHour(alarm.hour);
-            timePicker.setMinute(alarm.minute);
-            etName.setText(alarm.name);
-            switchVibration.setChecked(alarm.vibration);
+            hour = alarmObject.hour;
+            minute = alarmObject.minute;
+            timePicker.setHour(alarmObject.hour);
+            timePicker.setMinute(alarmObject.minute);
+            etName.setText(alarmObject.name);
+            switchVibration.setChecked(alarmObject.vibration);
             for(int i=0; i<7; i++)
-                tbWeek[i].setChecked(alarm.week[i]);
+                tbWeek[i].setChecked(alarmObject.week[i]);
             for(int i=0; i<MISSION_SIZE; i++)
-                cbMission[i].setChecked(alarm.mission[i]);
+                cbMission[i].setChecked(alarmObject.mission[i]);
             for(int i=0; i<PENALTY_SIZE; i++)
-                cbPenalty[i].setChecked(alarm.penalty[i]);
-            volumeBar.setProgress(alarm.ringtoneVolume);
-            uri = alarm.ringtoneName;
-            tvRingtone.setText(getUriToString(alarm.ringtoneName));
+                cbPenalty[i].setChecked(alarmObject.penalty[i]);
+            volumeBar.setProgress(alarmObject.ringtoneVolume);
+            uri = alarmObject.ringtoneUri;
+            tvRingtone.setText(getUriToString(alarmObject.ringtoneUri));
             getRingtoneIgnoreMute(uri);
         }
     }
 
     // Alarm 객체 가져오기
     public static void setAlarmItem(Alarm a) {
-        alarm = a;
+        alarmObject = a;
     }
 
     // 알람 벨소리 선택

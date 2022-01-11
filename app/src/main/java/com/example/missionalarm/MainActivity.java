@@ -19,8 +19,9 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     TextView tvNextAlarm;
 
+    static Alarm alarmObjectForOnAlarm;
+    Alarm alarmObject;
     AlarmManager alarmManager;
-    Alarm alarmTemp;
     int selectedIndex;
     long t1, t2;
     String textNoAlarm = "활성화된 알람이\n없습니다.";
@@ -148,18 +149,18 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode) {
             case 0: // 알람 추가 화면에서 복귀 후
                 if (resultCode == RESULT_OK) {
-                    alarmTemp = new Alarm();
-                    updateAlarmTemp(data);
-                    listBack.add(alarmTemp);
-                    listFront.add(alarmTemp.getInfo());
+                    alarmObject = new Alarm();
+                    updateAlarmObject(data);
+                    listBack.add(alarmObject);
+                    listFront.add(alarmObject.getInfo());
                 }
                 break;
             case 1: // 알람 수정 화면에서 복귀 후
                 if (resultCode == RESULT_OK) {    // 알람 수정
-                    alarmTemp = new Alarm();
-                    updateAlarmTemp(data);
-                    listBack.set(selectedIndex, alarmTemp);
-                    listFront.set(selectedIndex, alarmTemp.getInfo());
+                    alarmObject = new Alarm();
+                    updateAlarmObject(data);
+                    listBack.set(selectedIndex, alarmObject);
+                    listFront.set(selectedIndex, alarmObject.getInfo());
                 }
                 break;
         }
@@ -247,20 +248,8 @@ public class MainActivity extends AppCompatActivity {
         int codeIndexZero = listKeysSorted.get(0);
         registAlarm(codeIndexZero / 10000, codeIndexZero / 100 % 100, codeIndexZero % 100);
 
-        // AlarmReceiver에 데이터 전달
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        intent.putExtra("AlarmObject", true);
-        //intent.putExtra("AlarmObject", hashMapAlarmSorted.get(listKeysSorted.get(0)));
-
-        /*
-        int hour, minute, ringtoneVolume;
-        String name;
-        Uri ringtoneName;
-        boolean vibration;
-        boolean [] week = new boolean[7];
-        boolean [] mission = new boolean[3];
-        boolean [] penalty = new boolean[2];
-        */
+        // onAlarmActivity에 데이터 전달을 위해 객체 저장
+        alarmObjectForOnAlarm = alarmObject;
 
         // 다음 알람까지 얼마나 남았는지 일(Day), 시간(Hour), 분(Minute) 단위로 계산
         int diffDay = (codeIndexZero / 10000) - (timeCodeNow / 10000);
@@ -289,17 +278,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 알람 객체 새로고침
-    public void updateAlarmTemp (Intent data) {
-        alarmTemp.setTime(data.getIntExtra("hour", 0), data.getIntExtra("minute", 0));
+    public void updateAlarmObject (Intent data) {
+        alarmObject.setTime(data.getIntExtra("hour", 0), data.getIntExtra("minute", 0));
         for(int i=0; i<7; i++)
-            alarmTemp.setWeek(i, data.getBooleanExtra("week_" + i, false));
-        alarmTemp.setName(data.getStringExtra("name"));
-        alarmTemp.setRingtone(Uri.parse(data.getStringExtra("ringtoneName")), data.getIntExtra("ringtoneVolume", 50));
-        alarmTemp.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
+            alarmObject.setWeek(i, data.getBooleanExtra("week_" + i, false));
+        alarmObject.setName(data.getStringExtra("name"));
+        alarmObject.setRingtone(Uri.parse(data.getStringExtra("ringtoneName")), data.getIntExtra("ringtoneVolume", 50));
+        alarmObject.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
         for(int i=0; i<3; i++)
-            alarmTemp.setMission(i, data.getBooleanExtra("mission_" + i, false));
+            alarmObject.setMission(i, data.getBooleanExtra("mission_" + i, false));
         for(int i=0; i<2; i++)
-            alarmTemp.setPenalty(i, data.getBooleanExtra("penalty_" + i, false));
+            alarmObject.setPenalty(i, data.getBooleanExtra("penalty_" + i, false));
     }
 
 }
