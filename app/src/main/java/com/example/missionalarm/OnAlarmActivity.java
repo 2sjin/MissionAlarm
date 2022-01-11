@@ -3,14 +3,17 @@ package com.example.missionalarm;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -36,6 +39,27 @@ public class OnAlarmActivity extends AppCompatActivity {
 
         // 진동 권한 획득
         vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//마시멜로우 버전 권한 처리
+            if (Settings.canDrawOverlays(getApplicationContext())) {  //다른앱 위에 그리기 권한이 있을 때
+                Intent sIntent = new Intent(getApplicationContext(), MainActivity.class);
+                sIntent.putExtra("action", "tts");
+
+                //같은창 여러번 띄우지 않고 기존창 띄운다.
+                sIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                //Activity가 아닌 곳에서 startActivity를 사용하려고 할때
+                sIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(sIntent);
+            }
+        }
+
+        // 전체 화면
+        getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN );
 
         // 화면 자동꺼짐 방지
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -76,7 +100,7 @@ public class OnAlarmActivity extends AppCompatActivity {
 
 
     // 특수 키 입력 방지
-    @Override 
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_DOWN:

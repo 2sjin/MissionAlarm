@@ -92,19 +92,11 @@ public class MainActivity extends AppCompatActivity {
 
     // 알람매니저에 알람 등록
     public void registAlarm(int day, int hour, int minute) {
-        alarmManager = (AlarmManager)getSystemService (Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, day);
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
+        Intent intent = new Intent(this, MyService.class);
+        intent.putExtra("day", day);
+        intent.putExtra("hour", hour);
+        intent.putExtra("minute", minute);
+        startService(intent);
     }
 
     // 알람 매니저에서 알람 삭제
