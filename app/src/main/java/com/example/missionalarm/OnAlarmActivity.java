@@ -76,7 +76,7 @@ public class OnAlarmActivity extends AppCompatActivity {
 
 
     // 특수 키 입력 방지
-    @Override
+    @Override 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_DOWN:
