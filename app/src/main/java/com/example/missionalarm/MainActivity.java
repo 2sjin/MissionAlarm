@@ -2,17 +2,10 @@ package com.example.missionalarm;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.app.*;
+import android.content.*;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -21,13 +14,13 @@ import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<String> listFront = new ArrayList<>();
-    ArrayList<AlarmItem> listBack = new ArrayList<>();
+    ArrayList<Alarm> listBack = new ArrayList<>();
 
     ListView listView;
     TextView tvNextAlarm;
 
     AlarmManager alarmManager;
-    AlarmItem alarmTemp;
+    Alarm alarmTemp;
     int selectedIndex;
     long t1, t2;
     String textNoAlarm = "활성화된 알람이\n없습니다.";
@@ -38,9 +31,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        
-
-        regist();
         loadComponentId();
         updateList();
         updateNextAlarm();
@@ -72,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         listFront.remove(selectedIndex);
                         updateList();
                         updateNextAlarm();
+                        unregistAlarm();
                         dialog.dismiss();
                     }
                 });
@@ -91,31 +82,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // 다른 액티비티에서 복귀 후
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Bundle bundle = intent.getExtras();
-        if (bundle != null) {
-            tvNextAlarm.setText("하이");
-        }
+    protected void onResume() {
+        super.onResume();
+        updateNextAlarm();
     }
 
-    public void regist() {
+    // 알람매니저에 알람 등록
+    public void registAlarm(int week, int hour, int minute) {
         alarmManager = (AlarmManager)getSystemService (Context.ALARM_SERVICE);
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 13);
-        calendar.set(Calendar.MINUTE, 27);
+        calendar.set(Calendar.DAY_OF_WEEK, week);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pIntent);
     }
 
-    public void unregist(View view) {
+    // 알람 매니저에서 알람 삭제
+    public void unregistAlarm() {
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
         alarmManager.cancel(pIntent);
@@ -156,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode) {
             case 0: // 알람 추가 화면에서 복귀 후
                 if (resultCode == RESULT_OK) {
-                    alarmTemp = new AlarmItem();
+                    alarmTemp = new Alarm();
                     updateAlarmTemp(data);
                     listBack.add(alarmTemp);
                     listFront.add(alarmTemp.getInfo());
@@ -164,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 1: // 알람 수정 화면에서 복귀 후
                 if (resultCode == RESULT_OK) {    // 알람 수정
-                    alarmTemp = new AlarmItem();
+                    alarmTemp = new Alarm();
                     updateAlarmTemp(data);
                     listBack.set(selectedIndex, alarmTemp);
                     listFront.set(selectedIndex, alarmTemp.getInfo());
@@ -189,7 +181,10 @@ public class MainActivity extends AppCompatActivity {
 
     // 다음 알람 새로고침
     public void updateNextAlarm() {
-        List<Integer> listTimeCode = new ArrayList<>();
+        HashMap<Integer, Alarm> hashMapAlarm = new HashMap<>();
+        HashMap<Integer, Alarm> hashMapAlarmSorted = new HashMap<>();
+        List<Integer> listKeys = new ArrayList<>();
+        List<Integer> listKeysSorted = new ArrayList<>();
         LocalDateTime tNow = LocalDateTime.now();
         boolean allWeekisDisabled = false;
         int timeCode, weekCount;
@@ -214,34 +209,63 @@ public class MainActivity extends AppCompatActivity {
             for(int j=0; j<7; j++) {
                 if(listBack.get(i).week[j] == true) {
                     timeCode = ((j+1) * 10000) + (listBack.get(i).hour * 100) + listBack.get(i).minute;
-                    listTimeCode.add(timeCode);
+                    hashMapAlarm.put(timeCode, listBack.get(i));
                     weekCount++;
                 }
             }
             if(weekCount <= 0) {
                 timeCode = ((timeCodeNow / 10000) * 10000) + (listBack.get(i).hour * 100) + listBack.get(i).minute;
-                listTimeCode.add(timeCode);
+                hashMapAlarm.put(timeCode, listBack.get(i));
                 allWeekisDisabled = true;
             }
         }
-        Collections.sort(listTimeCode); // ArrayList 정렬
 
-        // 현재를 기준으로 리스트 재정렬
+        // 해시맵의 키 값을 ArrayList에 저장
+        Set<Integer> setKeys = hashMapAlarm.keySet();
+        listKeys = new ArrayList<>(setKeys);
+
+        // ArrayList 정렬
+        Collections.sort(listKeys);
+
+        // 현재를 기준으로 ArrayList 재정렬
         int indexOfSplit = 0;
-        for(int i=0; i<listTimeCode.size(); i++) {
-            if(listTimeCode.get(i) > timeCodeNow) {
+        for(int i=0; i<listKeys.size(); i++) {
+            if(listKeys.get(i) > timeCodeNow) {
                 indexOfSplit = i;
                 break;
             }
         }
-        List<Integer> listTimeCodeSorted = new ArrayList<>();
-        listTimeCodeSorted.addAll(listTimeCode.subList(indexOfSplit, listTimeCode.size()));
-        listTimeCodeSorted.addAll(listTimeCode.subList(0, indexOfSplit));
+
+        listKeysSorted.addAll(listKeys.subList(indexOfSplit, listKeys.size()));
+        listKeysSorted.addAll(listKeys.subList(0, indexOfSplit));
+
+        // 정렬된 ArrayList를 기준으로 새로운 해시맵에 키-값 쌍 저장
+        for (int i : listKeysSorted)
+            hashMapAlarmSorted.put(i, hashMapAlarm.get(i));
+
+        // 알람 매니저에 알람 등록
+        int codeIndexZero = listKeysSorted.get(0);
+        registAlarm(codeIndexZero / 10000, codeIndexZero / 100 % 100, codeIndexZero % 100);
+
+        // AlarmReceiver에 데이터 전달
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("AlarmObject", true);
+        //intent.putExtra("AlarmObject", hashMapAlarmSorted.get(listKeysSorted.get(0)));
+
+        /*
+        int hour, minute, ringtoneVolume;
+        String name;
+        Uri ringtoneName;
+        boolean vibration;
+        boolean [] week = new boolean[7];
+        boolean [] mission = new boolean[3];
+        boolean [] penalty = new boolean[2];
+        */
 
         // 다음 알람까지 얼마나 남았는지 일(Day), 시간(Hour), 분(Minute) 단위로 계산
-        int diffDay = (listTimeCodeSorted.get(0) / 10000) - (timeCodeNow / 10000);
-        int diffHour = (listTimeCodeSorted.get(0) / 100 % 100) - (timeCodeNow / 100 % 100);
-        int diffMinute = (listTimeCodeSorted.get(0) % 100) - (timeCodeNow % 100);
+        int diffDay = (codeIndexZero / 10000) - (timeCodeNow / 10000);
+        int diffHour = (codeIndexZero / 100 % 100) - (timeCodeNow / 100 % 100);
+        int diffMinute = (codeIndexZero % 100) - (timeCodeNow % 100);
         if(diffMinute < 0) {
             diffMinute += 60;
             diffHour--;
@@ -258,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 다음 알람까지 남은 시간 출력
-        String strResult = diffDay + "일 " + diffHour + "시간 " + diffMinute + "분 후에\n알람이 울립니다.";
+        String strResult = diffDay + "일 " + diffHour + "시간 " + diffMinute + "분 후에\n다음 알람이 울립니다.";
         Toast.makeText(MainActivity.this, strResult, Toast.LENGTH_SHORT).show();
         tvNextAlarm.setText(strResult);
 

@@ -30,7 +30,7 @@
         android:background="@color/purple_500"
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:paddingHorizontal="30dp"
+        android:paddingHorizontal="20dp"
         android:paddingVertical="20dp"
         android:text="모든 알람이 꺼진\n상태입니다"
         android:textSize="40dp"

@@ -2,8 +2,11 @@ package com.example.missionalarm;
 
 import android.net.Uri;
 
-public class AlarmItem {
-    int hour, minute, ringtoneVolume;
+import java.io.Serializable;
+
+public class Alarm implements Serializable {
+    private static final long serialVersionUID = 1L;
+    int hour, minute, ringtoneVolume, num;
     String name;
     Uri ringtoneName;
     boolean vibration;

@@ -31,7 +31,7 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     int hour, minute;
     long t1, t2;
-    static AlarmItem alarm;
+    static Alarm alarm;
 
     // Activity 초기 실행
     @Override
@@ -87,17 +87,10 @@ public class SetAlarmActivity extends AppCompatActivity {
         ringtoneRelease();
     }
 
-    // 뒤로가기 버튼 두 번 누르면 애플리케이션 종료
+    // 뒤로가기 버튼 누르면 이전 화면으로 이동
     @Override
     public void onBackPressed() {
-        t2 = System.currentTimeMillis();
-        Toast.makeText(this, "'뒤로' 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-        if (t2 - t1 < 2000) {
-            super.onBackPressed();
-            moveTaskToBack(true);   // 태스크를 백그라운드로 이동
-            finishAndRemoveTask();          // 액티비티 종료 + 태스크 리스트에서 지우기
-        }
-        t1 = System.currentTimeMillis();
+        finish();
     }
 
     // [취소] 버튼을 눌렀을 때
@@ -179,8 +172,8 @@ public class SetAlarmActivity extends AppCompatActivity {
         }
     }
 
-    // AlarmItem 객체 가져오기
-    public static void setAlarmItem(AlarmItem a) {
+    // Alarm 객체 가져오기
+    public static void setAlarmItem(Alarm a) {
         alarm = a;
     }
 
