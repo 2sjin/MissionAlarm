@@ -15,8 +15,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "★★★★★★★★★★★★★★★★★★★★★", Toast.LENGTH_LONG).show();    // AVD 확인용
 
-        Bundle bundle = new Bundle();
-        bundle.putString("onAlarm", "onAlarm");
-        intent.putExtras(bundle);
+        Intent i = new Intent(context, OnAlarmActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 }
