@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 ,"불광불급","수구초심"};
         SharedPreferences prefs = getSharedPreferences("test", MODE_PRIVATE);
         SharedPreferences.Editor editor= prefs.edit();
-        editor.putString(str[0],"헤아릴 수가 없을 만큼 많음");
+        editor.putString(str[0],"정도를 지나침은 미치지 못한 것과 같음.");
         editor.putString(str[1],"목을 베어 줄 수 있을 정도로 절친한 사귐");
         editor.putString(str[2],"우레 소리에 맞춰서 함께 한다‘는 뜻으로, 자신의 뚜렷한 소신 없이 " +
                 "그저 남이 하는 대로 따라하는 것을 의미");

@@ -30,6 +30,7 @@ public class OnAlarmActivity extends AppCompatActivity {
     Vibrator vibrator;
     long[] pattern = {100, 1000};
 
+
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
 
@@ -39,29 +40,10 @@ public class OnAlarmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_on_alarm);
         context = this;
 
-        // 진동 권한 획득
+        // 진동 권한 획득 및 디스플레이 관련 제어
         vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+        controlDisplay();
 
-        // 전체 화면
-        getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN );
-
-        // 화면 자동꺼짐 방지
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        // 꺼진 화면 깨우기
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
-                | PowerManager.ACQUIRE_CAUSES_WAKEUP
-                | PowerManager.ON_AFTER_RELEASE,"WAKE:LOCK");
-        wakeLock.acquire(); // WakeLock 깨우기
 
         // MainActivity에서 알람 객체 가져오기
         if(MainActivity.alarmObjectForOnAlarm != null)
@@ -89,6 +71,12 @@ public class OnAlarmActivity extends AppCompatActivity {
             vibrator.vibrate(pattern, 0);
     }
 
+    // 미션 액티비티에서 복귀 후
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        finish();
+    }
 
 
     // 특수 키 입력 방지
@@ -137,5 +125,29 @@ public class OnAlarmActivity extends AppCompatActivity {
     public void loadComponentId() {
         tvOnAlarmName = findViewById(R.id.tvOnAlarmName);
         tvOnAlarmTime = findViewById(R.id.tvOnAlarmTime);
+    }
+
+    // 디스플레이 제어 관련 메소드
+    public void controlDisplay() {
+        // 전체 화면
+        getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN );
+
+        // 화면 자동꺼짐 방지
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // 꺼진 화면 깨우기
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
+                | PowerManager.ACQUIRE_CAUSES_WAKEUP
+                | PowerManager.ON_AFTER_RELEASE,"WAKE:LOCK");
+        wakeLock.acquire(); // WakeLock 깨우기
     }
 }
