@@ -90,13 +90,13 @@ public class OnAlarmActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-    @Override public void onBackPressed() { return; }
+     @Override public void onBackPressed() { return; }
 
     // [알람 끄기] 버튼을 눌렀을 때
     public void clickedButtonOff(View view) {
         vibrator.cancel();
    //     ringtoneRelease(); // 앙!! 까먹지망!!
-        wakeLock.release(); // WakeLock 해제
+        // wakeLock.release(); // WakeLock 해제
 //        finish();
 
         Intent intent = new Intent(this, copy.class); // copy class로 이동

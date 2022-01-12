@@ -78,17 +78,22 @@ public class copy extends AppCompatActivity {
             public void onClick(View v){
                 switch(v.getId()) {
                     case R.id.button_1:{
-                        String s1 = editText1.getText().toString();
-                        Log.d("문제발생",s1);
-                        if(str[FourIndex].equals(s1)){
-                            ringtoneRelease();
-                            finish();
+                        try {
+                            String s1 = editText1.getText().toString();
+                            Log.d("문제발생", s1);
+                            if (str[FourIndex].equals(s1)) {
+                                ringtoneRelease();
+                                finish();
+                            } else if (finalResult == Integer.parseInt(s1)) {
+                                ringtoneRelease();
+                                finish();
+                            } else
+                                Toast.makeText(getApplicationContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show();
+                            break;
                         }
-                        else if(finalResult == Integer.parseInt(s1)){
-                            ringtoneRelease();
-                            finish();
+                        catch(Exception e) {
+                            Toast.makeText(getApplicationContext(), "정수를 입력해주세요.", Toast.LENGTH_SHORT).show();
                         }
-                        break;
                     }
 
                   /*  case R.id.button_4:{
