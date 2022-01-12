@@ -86,7 +86,7 @@ public class OnAlarmActivity extends AppCompatActivity {
         // 벌칙 타이머 작동
         if (alarm.penalty[0] == true) {
             textViewTimer.setVisibility(View.VISIBLE);
-            timer = new MyTimer(10*1000, 1*1000, textViewTimer, this);
+            timer = new MyTimer(10*1000, 1*1000, textViewTimer, this, null);
             timer.start();
         }
         else

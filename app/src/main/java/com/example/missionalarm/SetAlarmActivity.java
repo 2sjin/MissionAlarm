@@ -155,12 +155,6 @@ public class SetAlarmActivity extends AppCompatActivity {
         cbMission[1] = findViewById(R.id.cbMission2);
         switchPenalty[0] = findViewById(R.id.switchPenalty1);
         volumeBar = findViewById(R.id.volumeBar);
-        etPhone[0] = findViewById(R.id.editTextPhone1);
-        etPhone[1] = findViewById(R.id.editTextPhone2);
-        etPhone[2] = findViewById(R.id.editTextPhone3);
-        etPhone[3] = findViewById(R.id.editTextPhone4);
-        etPhone[4] = findViewById(R.id.editTextPhone5);
-
     }
 
     // 컴포넌트 초기화

@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.RECEIVE_SMS}, SMS_RECEIVE_PERMISSON);
             }
         }
+
         String [] str = {"과유불급","문경지교","부화뇌동","망양지탄","누란지세","결자해지","은감불원","수기치인"
                 ,"불광불급","수구초심"};
         SharedPreferences prefs = getSharedPreferences("test", MODE_PRIVATE);

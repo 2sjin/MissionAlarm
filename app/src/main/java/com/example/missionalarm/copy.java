@@ -30,11 +30,15 @@ public class copy extends AppCompatActivity {
     TextView textViewTimer;
 
     Ringtone ringtone = ((OnAlarmActivity)OnAlarmActivity.context).ringtone;
+
+    public static boolean failedMission = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_copy);
 
+        failedMission = false;
         alarmObject = OnAlarmActivity.alarmObjectForMission;
         controlDisplay();
 
@@ -70,7 +74,7 @@ public class copy extends AppCompatActivity {
         // 벌칙 타이머 작동
         if (alarmObject.penalty[0] == true) {
             textViewTimer.setVisibility(View.VISIBLE);
-            timer = new MyTimer(10*1000, 1*1000, textViewTimer, this);
+            timer = new MyTimer(10*1000, 1*1000, textViewTimer, this, button1);
             timer.start();
         }
         else
@@ -111,33 +115,39 @@ public class copy extends AppCompatActivity {
         {
             @Override
             public void onClick(View v){
-                switch(v.getId()) {
-                    case R.id.button_1:{
-                        try {
-                            String s1 = editText1.getText().toString();
-                            Log.d("문제발생", s1);
-                            if (str[FourIndex].equals(s1)) {
-                                cancelTimer(false);
-                                ringtoneRelease();
-                                finish();
-                            } else if (finalResult == Integer.parseInt(s1)) {
-                                cancelTimer(false);
-                                ringtoneRelease();
-                                finish();
-                            } else {
-                                if(alarmObject.penalty[0] == true) {
-                                    cancelTimer(true); // 타이머 취소 후 재시작
+                if(failedMission == true) {
+                    cancelTimer(false);
+                    ringtoneRelease();
+                    finish();
+                }
+                else {
+                    switch (v.getId()) {
+                        case R.id.button_1: {
+                            try {
+                                String s1 = editText1.getText().toString();
+                                Log.d("문제발생", s1);
+                                if (str[FourIndex].equals(s1)) {
+                                    cancelTimer(false);
+                                    ringtoneRelease();
+                                    finish();
+                                } else if (finalResult == Integer.parseInt(s1)) {
+                                    cancelTimer(false);
+                                    ringtoneRelease();
+                                    finish();
+                                } else {
+                                    if (alarmObject.penalty[0] == true) {
+                                        cancelTimer(true); // 타이머 취소 후 재시작
+                                    }
+                                    Toast.makeText(getApplicationContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show();
                                 }
-                                Toast.makeText(getApplicationContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show();
+                                break;
+                            } catch (NumberFormatException e) {
+                                cancelTimer(true); // 타이머 취소 후 재시작
+                                if (finalRandomMission == 1)
+                                    Toast.makeText(getApplicationContext(), "정수를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                                else
+                                    Toast.makeText(getApplicationContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show();
                             }
-                            break;
-                        }
-                        catch(NumberFormatException e) {
-                            cancelTimer(true); // 타이머 취소 후 재시작
-                            if(finalRandomMission == 1)
-                                Toast.makeText(getApplicationContext(), "정수를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(getApplicationContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
