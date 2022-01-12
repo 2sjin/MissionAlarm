@@ -348,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i<7; i++)
             alarmObject.setWeek(i, data.getBooleanExtra("week_" + i, false));
         alarmObject.setName(data.getStringExtra("name"));
+        alarmObject.setPhone(data.getStringExtra("phone"));
         alarmObject.setRingtone(Uri.parse(data.getStringExtra("ringtoneName")), data.getIntExtra("ringtoneVolume", 50));
         alarmObject.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
         for(int i=0; i<SetAlarmActivity.MISSION_SIZE; i++)

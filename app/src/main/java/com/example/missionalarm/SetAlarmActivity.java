@@ -17,7 +17,7 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     TextView tvRingtone;
     TimePicker timePicker;
-    EditText etName;
+    EditText etName, etPhone;
     Switch switchVibration;
     ToggleButton [] tbWeek = new ToggleButton[7];
     CheckBox [] cbMission = new CheckBox[MISSION_SIZE];
@@ -81,6 +81,17 @@ public class SetAlarmActivity extends AppCompatActivity {
                     vibrator.cancel();
             }
         });
+
+        // 이벤트: 벌칙용 발신번호 스위치 조작 시
+        switchPenalty[0].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true)
+                    etPhone.setVisibility(View.VISIBLE);
+                else
+                    etPhone.setVisibility(View.GONE);
+            }
+        });
     }
 
     // Activity 종료 시 알람음(미리 듣기) 종료
@@ -111,6 +122,7 @@ public class SetAlarmActivity extends AppCompatActivity {
         for(int i=0; i<7; i++)
             intent.putExtra("week_" + i, tbWeek[i].isChecked());
         intent.putExtra("name", etName.getText().toString());
+        intent.putExtra("phone", etPhone.getText().toString());
         intent.putExtra("ringtoneName", uri.toString());
         intent.putExtra("ringtoneVolume", volumeBar.getProgress());
         intent.putExtra("vibration", switchVibration.isChecked());
@@ -127,6 +139,7 @@ public class SetAlarmActivity extends AppCompatActivity {
         tvRingtone = findViewById(R.id.tvRingtone);
         timePicker = findViewById(R.id.timePicker);
         etName = findViewById(R.id.etName);
+        etPhone = findViewById(R.id.etPhone);
         switchVibration = findViewById(R.id.switchVibration);
         tbWeek[0] = findViewById(R.id.tbSunday);
         tbWeek[1] = findViewById(R.id.tbMonday);
@@ -159,6 +172,7 @@ public class SetAlarmActivity extends AppCompatActivity {
             timePicker.setHour(alarmObject.hour);
             timePicker.setMinute(alarmObject.minute);
             etName.setText(alarmObject.name);
+            etPhone.setText(alarmObject.phone);
             switchVibration.setChecked(alarmObject.vibration);
             for(int i=0; i<7; i++)
                 tbWeek[i].setChecked(alarmObject.week[i]);
@@ -243,6 +257,7 @@ public class SetAlarmActivity extends AppCompatActivity {
     public void startTestOnAlarm(View view) {
         alarmObjectForTest = new Alarm();
         alarmObjectForTest.setName(etName.getText().toString());
+        alarmObjectForTest.setPhone(etPhone.getText().toString());
         alarmObjectForTest.setTime(hour, minute);
         alarmObjectForTest.setRingtone(uri, volumeBar.getProgress());
         alarmObjectForTest.setVibration(switchVibration.isChecked());

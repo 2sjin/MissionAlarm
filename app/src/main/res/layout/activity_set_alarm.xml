@@ -230,12 +230,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
                         <CheckBox
                             android:id="@+id/cbMission1"
                             android:layout_width="165dp"
@@ -272,17 +266,25 @@
                     android:layout_height="48dp"
                     android:text="문자메시지 전송" />
 
-                <Button
-                    android:id="@+id/button4"
+                <EditText
+                    android:id="@+id/etPhone"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="100dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginRight="100dp"
-                    android:onClick="startTestOnAlarm"
-                    android:text="알람 미리보기" />
-
+                    android:layout_height="59dp"
+                    android:visibility="gone"
+                    android:ems="10"
+                    android:hint="발신번호 입력(예: 01012345678)"
+                    android:inputType="phone" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="100dp"
+                android:onClick="startTestOnAlarm"
+                android:text="알람 미리보기" />
 
         </LinearLayout>
     </ScrollView>

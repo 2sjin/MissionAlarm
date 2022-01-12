@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class Alarm implements Serializable {
     private static final long serialVersionUID = 1L;
     int hour, minute, ringtoneVolume;
-    String name;
+    String name, phone;
     Uri ringtoneUri;
     boolean vibration;
     boolean [] week = new boolean[7];
@@ -24,6 +24,7 @@ public class Alarm implements Serializable {
         this.ringtoneVolume = volume;
     }
     public void setName(String str) { this.name = str; }
+    public void setPhone(String str) { this.phone = str; }
     public void setVibration(boolean boo) { this.vibration = boo; }
     public void setWeek(int index, boolean boo) { this.week[index] = boo; }
     public void setMission(int index, boolean boo) { this.mission[index] = boo; }

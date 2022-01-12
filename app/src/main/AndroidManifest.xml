@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -21,10 +21,6 @@
 
         <service
             android:name=".copy"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".MyServiceOnAlarm"
             android:enabled="true"
             android:exported="true" />
         <service
@@ -59,6 +55,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
         <receiver android:name=".AlarmReceiver" />
     </application>
