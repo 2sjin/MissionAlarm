@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class OnAlarmActivity extends AppCompatActivity {
+    public static Object context;
     TextView tvOnAlarmName;
     TextView tvOnAlarmTime;
     Alarm alarm;
@@ -36,6 +37,7 @@ public class OnAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_alarm);
+        context = this;
 
         // 진동 권한 획득
         vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
@@ -105,12 +107,12 @@ public class OnAlarmActivity extends AppCompatActivity {
     // [알람 끄기] 버튼을 눌렀을 때
     public void clickedButtonOff(View view) {
         vibrator.cancel();
-        ringtoneRelease(); // 앙!! 까먹지망!!
+   //     ringtoneRelease(); // 앙!! 까먹지망!!
         wakeLock.release(); // WakeLock 해제
-        finish();
+//        finish();
 
-//        Intent intent = new Intent(this, MainActivity.class); // copy class로 이동
-//        startActivity(intent);
+        Intent intent = new Intent(this, copy.class); // copy class로 이동
+        startActivity(intent);
     }
 
     // 알람음 재생
