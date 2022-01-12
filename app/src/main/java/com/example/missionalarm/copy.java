@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.media.Ringtone;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -34,8 +36,7 @@ public class copy extends AppCompatActivity {
         alarmObject = OnAlarmActivity.alarmObjectForMission;
         controlDisplay();
 
-        // 알람음 종료
-        // 사자성어 사전
+        // 사자성어 답안
         String [] str = {"과유불급","문경지교","부화뇌동","망양지탄","누란지세","결자해지","은감불원","수기치인"
                 ,"불광불급","수구초심"};
         SharedPreferences sharedPreferences= getSharedPreferences("test", MODE_PRIVATE);
@@ -47,6 +48,7 @@ public class copy extends AppCompatActivity {
         int FourIndex = random.nextInt(str.length);
         Log.d("랜덤숫자", String.valueOf(randomMission));
         TextView textView = findViewById(R.id.textView);
+        TextView textViewTitle = findViewById(R.id.textViewTitle);
         Button button1 = (Button) findViewById(R.id.button_1);
         EditText editText1 = (EditText) findViewById(R.id.editView);
         String s;
@@ -58,16 +60,18 @@ public class copy extends AppCompatActivity {
         else if(randomMission == 1 && alarmObject.mission[1] == false)
             randomMission = 0;
 
-        if(randomMission == 0){
+        if(randomMission == 0) {
             s = sharedPreferences.getString(str[FourIndex], "");
             textView.setText(s);
+            textViewTitle.setText("[미션]\n사자성어 퀴즈의\n정답을 입력하세요");
         }
-        else{
+        else {
             if (operation[randomOperation].equals("*")){
                 firstNum = random.nextInt(31)+2;
                 secondNum = random.nextInt(31)+2;
             }
             textView.setText(firstNum + operation[randomOperation]+secondNum);
+            textViewTitle.setText("[미션]\n수학(사칙연산)퀴즈의\n정답을 입력하세요");
         }
         int result = 0;
         if (operation[randomOperation].equals("+")){
@@ -128,6 +132,21 @@ public class copy extends AppCompatActivity {
         button1.setOnClickListener(listener);
 
     }
+
+    // 특수 키 입력 방지
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                setVolumeControlStream(AudioManager.ERROR);
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    @Override public void onBackPressed() { return; }
+
+    // 알람음 정지
     public void ringtoneRelease() {
         if( ringtone != null ) {
             if( ringtone.isPlaying() ) {

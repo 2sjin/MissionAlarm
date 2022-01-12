@@ -21,7 +21,7 @@ public class SetAlarmActivity extends AppCompatActivity {
     Switch switchVibration;
     ToggleButton [] tbWeek = new ToggleButton[7];
     CheckBox [] cbMission = new CheckBox[MISSION_SIZE];
-    CheckBox [] cbPenalty = new CheckBox[PENALTY_SIZE];
+    Switch [] switchPenalty = new Switch[PENALTY_SIZE];
     SeekBar volumeBar;
 
     Uri uri;
@@ -114,7 +114,7 @@ public class SetAlarmActivity extends AppCompatActivity {
         for(int i=0; i<MISSION_SIZE; i++)
             intent.putExtra("mission_" + i, cbMission[i].isChecked());
         for(int i=0; i<PENALTY_SIZE; i++)
-            intent.putExtra("penalty_" + i, cbPenalty[i].isChecked());
+            intent.putExtra("penalty_" + i, switchPenalty[i].isChecked());
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -134,7 +134,7 @@ public class SetAlarmActivity extends AppCompatActivity {
         tbWeek[6] = findViewById(R.id.tbSaturday);
         cbMission[0] = findViewById(R.id.cbMission1);
         cbMission[1] = findViewById(R.id.cbMission2);
-        cbPenalty[0] = findViewById(R.id.cbPanelty1);
+        switchPenalty[0] = findViewById(R.id.switchPenalty1);
         volumeBar = findViewById(R.id.volumeBar);
     }
 
@@ -162,7 +162,7 @@ public class SetAlarmActivity extends AppCompatActivity {
             for(int i=0; i<MISSION_SIZE; i++)
                 cbMission[i].setChecked(alarmObject.mission[i]);
             for(int i=0; i<PENALTY_SIZE; i++)
-                cbPenalty[i].setChecked(alarmObject.penalty[i]);
+                switchPenalty[i].setChecked(alarmObject.penalty[i]);
             volumeBar.setProgress(alarmObject.ringtoneVolume);
             uri = alarmObject.ringtoneUri;
             tvRingtone.setText(getUriToString(alarmObject.ringtoneUri));
@@ -248,7 +248,7 @@ public class SetAlarmActivity extends AppCompatActivity {
         for(int i=0; i<MISSION_SIZE; i++)
             alarmObjectForTest.setMission(i, cbMission[i].isChecked());
         for(int i=0; i<PENALTY_SIZE; i++)
-            alarmObjectForTest.setPenalty(i, cbPenalty[i]. isChecked());
+            alarmObjectForTest.setPenalty(i, switchPenalty[i]. isChecked());
 
 
         Intent intent = new Intent(this, OnAlarmActivity.class);

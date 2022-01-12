@@ -266,24 +266,17 @@
                     android:layout_height="wrap_content"
                     android:text="벌칙(문자메시지 전송)" />
 
-                <TableLayout
-                    android:id="@+id/tablePenalty"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <CheckBox
-                            android:id="@+id/cbPanelty1"
-                            android:layout_width="134dp"
-                            android:layout_height="wrap_content"
-                            android:text="문자 전송" />
-
-
-                    </TableRow>
-                </TableLayout>
+                    <Switch
+                        android:id="@+id/switchPenalty1"
+                        android:layout_width="151dp"
+                        android:layout_height="48dp"
+                        android:text="문자 전송" />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/button4"
@@ -293,7 +286,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginRight="100dp"
                     android:onClick="startTestOnAlarm"
-                    android:text="알람 테스트" />
+                    android:text="알람 미리보기" />
 
             </LinearLayout>
 
