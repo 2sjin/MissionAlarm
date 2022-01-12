@@ -11,8 +11,8 @@ public class Alarm implements Serializable {
     Uri ringtoneUri;
     boolean vibration;
     boolean [] week = new boolean[7];
-    boolean [] mission = new boolean[3];
-    boolean [] penalty = new boolean[2];
+    boolean [] mission = new boolean[2];
+    boolean [] penalty = new boolean[1];
 
     // set 메소드
     public void setTime(int hour, int minute) {
@@ -33,7 +33,7 @@ public class Alarm implements Serializable {
     public String getInfo() {
         int count = 0;
         String[] weekStr = {"일", "월", "화", "수", "목", "금", "토"};
-        String returnStr = String.format("%s\n%02d:%02d        ", name, hour, minute);
+        String returnStr = String.format("\n%s\n%02d:%02d        ", name, hour, minute);
 
         for(int i=0; i<7; i++) {
             if (week[i] == true)
@@ -51,19 +51,24 @@ public class Alarm implements Serializable {
             }
         }
 
-        returnStr = returnStr.concat("\n");
+        returnStr = returnStr.concat("        ");
         count = 0;
-        for(int i=0; i<3; i++) {
+        for(int i=0; i<2; i++) {
             if (mission[i] == true)
                 count++;
         }
-        if(count > 0)
-            returnStr = returnStr.concat("[무작위 미션(" + count + ")]  ");
-        if (penalty[0] == true)
-            returnStr = returnStr.concat("[벌칙 1]  ");
-        if (penalty[1] == true)
-            returnStr = returnStr.concat("[벌칙 2]  ");
+        if(count > 1)
+            returnStr = returnStr.concat("[무작위]  ");
+        else if(mission[0] == true)
+            returnStr = returnStr.concat("[사자성어]  ");
+        else if(mission[1] == true)
+            returnStr = returnStr.concat("[수학]  ");
 
+
+        if (penalty[0] == true)
+            returnStr = returnStr.concat("[벌칙문자]");
+
+        returnStr = returnStr.concat("\n");
         return returnStr;
     }
 

@@ -187,4 +187,10 @@ public class copy extends AppCompatActivity {
                 | PowerManager.ON_AFTER_RELEASE,"WAKE:LOCK");
         wakeLock.acquire(); // WakeLock 깨우기
     }
+
+    public void exitTest(View view) {
+        ringtoneRelease();
+        finish();
+    }
+
 }

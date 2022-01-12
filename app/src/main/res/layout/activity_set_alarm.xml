@@ -219,7 +219,7 @@
                     android:id="@+id/tvMission"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="미션" />
+                    android:text="미션(다중 선택 시 1가지 무작위로 실행)" />
 
                 <TableLayout
                     android:id="@+id/tableMission"
