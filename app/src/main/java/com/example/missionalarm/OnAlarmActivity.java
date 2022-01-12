@@ -52,8 +52,8 @@ public class OnAlarmActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        // MainActivity에서 알람 객체 가져오기
-        if(MainActivity.alarmObjectForOnAlarm != null)
+        // MainActivity에서 알람 객체 가져오기(테스트 중일 경우 SetAlarmActivity에서)
+        if(SetAlarmActivity.alarmObjectForTest == null)
             alarm = MainActivity.alarmObjectForOnAlarm;
         else
             alarm = SetAlarmActivity.alarmObjectForTest;
@@ -77,8 +77,9 @@ public class OnAlarmActivity extends AppCompatActivity {
         if (alarm.vibration == true)
             vibrator.vibrate(pattern, 0);
 
+
+        // 버튼 텍스트 변경
         buttonOff.setText("미션 시작하기");
-        // 버튼 이름 변경
         if (alarm.mission[0] == false && alarm.mission[1] == false) {
             buttonOff.setText("알람 끄기");
         }

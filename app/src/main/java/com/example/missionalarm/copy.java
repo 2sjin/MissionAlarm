@@ -47,13 +47,21 @@ public class copy extends AppCompatActivity {
         int randomMission = random.nextInt(2);
         int FourIndex = random.nextInt(str.length);
         Log.d("랜덤숫자", String.valueOf(randomMission));
+
         TextView textView = findViewById(R.id.textView);
         TextView textViewTitle = findViewById(R.id.textViewTitle);
         Button button1 = (Button) findViewById(R.id.button_1);
+        Button buttonExitTest = findViewById(R.id.buttonExitTest);
         EditText editText1 = (EditText) findViewById(R.id.editView);
+
         String s;
         String operation[] = {"+","-","*"};
         int randomOperation = random.nextInt(3 );
+
+        if(SetAlarmActivity.alarmObjectForTest == null)
+            buttonExitTest.setVisibility(View.INVISIBLE);
+        else
+            buttonExitTest.setVisibility(View.VISIBLE);
 
         if(randomMission == 0 && alarmObject.mission[0] == false)
             randomMission = 1;

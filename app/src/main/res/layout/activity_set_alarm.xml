@@ -266,17 +266,56 @@
                     android:layout_height="wrap_content"
                     android:text="벌칙(문자메시지 전송)" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                <Switch
+                    android:id="@+id/switchPenalty1"
+                    android:layout_width="151dp"
+                    android:layout_height="48dp"
+                    android:text="문자 전송" />
 
-                    <Switch
-                        android:id="@+id/switchPenalty1"
-                        android:layout_width="151dp"
-                        android:layout_height="48dp"
-                        android:text="문자 전송" />
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/editTextPhone1"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:ems="10"
+                    android:visibility="gone"
+                    android:hint="발신번호 1 입력 (예: 01012345678)"
+                    android:inputType="phone" />
+
+                <EditText
+                    android:id="@+id/editTextPhone2"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:ems="10"
+                    android:visibility="gone"
+                    android:hint="발신번호 2 입력 (예: 01012345678)"
+                    android:inputType="phone" />
+
+                <EditText
+                    android:id="@+id/editTextPhone3"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:ems="10"
+                    android:visibility="gone"
+                    android:hint="발신번호 3 입력 (예: 01012345678)"
+                    android:inputType="phone" />
+
+                <EditText
+                    android:id="@+id/editTextPhone4"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:ems="10"
+                    android:visibility="gone"
+                    android:hint="발신번호 4 입력 (예: 01012345678)"
+                    android:inputType="phone" />
+
+                <EditText
+                    android:id="@+id/editTextPhone5"
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:ems="10"
+                    android:visibility="gone"
+                    android:hint="발신번호 5 입력 (예: 01012345678)"
+                    android:inputType="phone" />
 
                 <Button
                     android:id="@+id/button4"

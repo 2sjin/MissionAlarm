@@ -22,6 +22,7 @@ public class SetAlarmActivity extends AppCompatActivity {
     ToggleButton [] tbWeek = new ToggleButton[7];
     CheckBox [] cbMission = new CheckBox[MISSION_SIZE];
     Switch [] switchPenalty = new Switch[PENALTY_SIZE];
+    EditText [] etPhone = new EditText[5];
     SeekBar volumeBar;
 
     Uri uri;
@@ -38,6 +39,9 @@ public class SetAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
+
+        // 미리보기용 알람 객체 초기화
+        alarmObjectForTest = null;
 
         loadComponentId();
         vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);    // 진동 권한 획득
@@ -76,6 +80,21 @@ public class SetAlarmActivity extends AppCompatActivity {
                     vibrator.vibrate(1000);
                 else
                     vibrator.cancel();
+            }
+        });
+
+        // 이벤트: 벌칙(문자) 스위치 조작 시
+        switchPenalty[0].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked == true) {
+                    for(int i=0; i<5; i++)
+                        etPhone[i].setVisibility(View.VISIBLE);
+                }
+                else {
+                    for (int i=0; i<5; i++)
+                        etPhone[i].setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -136,6 +155,12 @@ public class SetAlarmActivity extends AppCompatActivity {
         cbMission[1] = findViewById(R.id.cbMission2);
         switchPenalty[0] = findViewById(R.id.switchPenalty1);
         volumeBar = findViewById(R.id.volumeBar);
+        etPhone[0] = findViewById(R.id.editTextPhone1);
+        etPhone[1] = findViewById(R.id.editTextPhone2);
+        etPhone[2] = findViewById(R.id.editTextPhone3);
+        etPhone[3] = findViewById(R.id.editTextPhone4);
+        etPhone[4] = findViewById(R.id.editTextPhone5);
+
     }
 
     // 컴포넌트 초기화
@@ -249,7 +274,6 @@ public class SetAlarmActivity extends AppCompatActivity {
             alarmObjectForTest.setMission(i, cbMission[i].isChecked());
         for(int i=0; i<PENALTY_SIZE; i++)
             alarmObjectForTest.setPenalty(i, switchPenalty[i]. isChecked());
-
 
         Intent intent = new Intent(this, OnAlarmActivity.class);
         startActivity(intent);
