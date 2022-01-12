@@ -40,20 +40,6 @@ public class OnAlarmActivity extends AppCompatActivity {
         // 진동 권한 획득
         vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//마시멜로우 버전 권한 처리
-            if (Settings.canDrawOverlays(getApplicationContext())) {  //다른앱 위에 그리기 권한이 있을 때
-                Intent sIntent = new Intent(getApplicationContext(), MainActivity.class);
-                sIntent.putExtra("action", "tts");
-
-                //같은창 여러번 띄우지 않고 기존창 띄운다.
-                sIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                //Activity가 아닌 곳에서 startActivity를 사용하려고 할때
-                sIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(sIntent);
-            }
-        }
-
         // 전체 화면
         getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -76,7 +62,11 @@ public class OnAlarmActivity extends AppCompatActivity {
         wakeLock.acquire(); // WakeLock 깨우기
 
         // MainActivity에서 알람 객체 가져오기
-        alarm = MainActivity.alarmObjectForOnAlarm;
+        if(MainActivity.alarmObjectForOnAlarm != null)
+           alarm = MainActivity.alarmObjectForOnAlarm;
+        else
+            alarm = SetAlarmActivity.alarmObjectForTest;
+
 
         // 텍스트뷰 설정
         loadComponentId();
@@ -115,9 +105,12 @@ public class OnAlarmActivity extends AppCompatActivity {
     // [알람 끄기] 버튼을 눌렀을 때
     public void clickedButtonOff(View view) {
         vibrator.cancel();
-        ringtoneRelease();
+        ringtoneRelease(); // 앙!! 까먹지망!!
         wakeLock.release(); // WakeLock 해제
         finish();
+
+//        Intent intent = new Intent(this, MainActivity.class); // copy class로 이동
+//        startActivity(intent);
     }
 
     // 알람음 재생

@@ -2,11 +2,17 @@ package com.example.missionalarm;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.*;
 import android.content.*;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.*;
 import java.time.LocalDateTime;
@@ -31,6 +37,71 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // 다른 앱 위에 표시 권한 확인
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // 마시멜로우 권한 처리
+            Intent intentDraw;
+            if (Settings.canDrawOverlays(getApplicationContext()) == false) {  // 다른 앱 위에 표시 권한이 없을 때
+                intentDraw = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intentDraw, 456);
+                if (Settings.canDrawOverlays(getApplicationContext()) == false) {   // 다른 앱 위에 표시 권한이 없을 때
+                    AlertDialog.Builder ad = new AlertDialog.Builder(MainActivity.this);
+                    ad.setTitle("다른 앱 위에 표시 권한");
+                    ad.setMessage("'다른 앱 위에 표시' 권한 활성화 후 애플리케이션을 다시 시작해주세요.");
+                    ad.setCancelable(false);    // 다이얼로그 바깥 영역 클릭 시 취소되지 않음
+                    ad.setNegativeButton("종료", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finishAndRemoveTask();
+                            dialog.dismiss();
+                        }
+                    });
+                    ad.show(); // 다이얼로그 출력
+                }
+            }
+        }
+
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.SEND_SMS},1);
+        final int SMS_RECEIVE_PERMISSON=1;
+
+        //권한이 부여되어 있는지 확인
+        int permissonCheck= ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
+        if(permissonCheck == PackageManager.PERMISSION_GRANTED){
+        }else{
+            //권한설정 dialog에서 거부를 누르면
+            //ActivityCompat.shouldShowRequestPermissionRationale 메소드의 반환값이 true가 된다.
+            //단, 사용자가 "Don't ask again"을 체크한 경우
+            //거부하더라도 false를 반환하여, 직접 사용자가 권한을 부여하지 않는 이상, 권한을 요청할 수 없게 된다.
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECEIVE_SMS)){
+                //이곳에 권한이 왜 필요한지 설명하는 Toast나 dialog를 띄워준 후, 다시 권한을 요청한다.
+                ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.RECEIVE_SMS}, SMS_RECEIVE_PERMISSON);
+            }else{
+                ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.RECEIVE_SMS}, SMS_RECEIVE_PERMISSON);
+            }
+        }
+        String [] str = {"과유불급","문경지교","부화뇌동","망양지탄","누란지세","결자해지","은감불원","수기치인"
+                ,"불광불급","수구초심"};
+        SharedPreferences prefs = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences.Editor editor= prefs.edit();
+        editor.putString(str[0],"헤아릴 수가 없을 만큼 많음");
+        editor.putString(str[1],"목을 베어 줄 수 있을 정도로 절친한 사귐");
+        editor.putString(str[2],"우레 소리에 맞춰서 함께 한다‘는 뜻으로, 자신의 뚜렷한 소신 없이 " +
+                "그저 남이 하는 대로 따라하는 것을 의미");
+        editor.putString(str[3]," 달아난 양을 찾다가 여러 갈래 길에 이르러 길을 잃었다는 뜻으로," +
+                "학문의 길이 여러 갈래로 나뉘어져 있어 진리를 찾기 어려움");
+        editor.putString(str[4],"포개어 놓은 알의 형세라는 뜻으로, 몹시 위험한 형세를 "+
+                "비유적으로 이르는 말");
+        editor.putString(str[5],"일을 맺은 사람이 풀어야 한다.");
+        editor.putString(str[6],"은나라의 거울은 먼 데 있지 않다. 전대인 하나라에 있다‘\n" +
+                "* 은나라와 하나라는 모두 망했다.\n" +
+                "본받을 만한 좋은 전례는 가까운 곳에 있다.");
+        editor.putString(str[7],"자신의 몸과 마음을 닦은 후에 남을 다스림");
+        editor.putString(str[8],"미치지 않으면 미치지 못한다.");
+        editor.putString(str[9],"‘여우는 죽을 때 구릉을 향해 머리를 두고 초심으로 돌아간다‘란 뜻으로\n" +
+                "근본을 잊지 않는 마음을 뜻하거나\n" +
+                "죽음을 앞두고 고향을 그리워하는 마음을 의미");
+        editor.commit();
 
         loadComponentId();
         updateList();
@@ -61,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         listBack.remove(selectedIndex);
                         listFront.remove(selectedIndex);
-                        unregistAlarm();
+                        // unregistAlarm();
                         updateList();
                         updateNextAlarm();
                         dialog.dismiss();
@@ -115,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         if (t2 - t1 < 2000) {
             super.onBackPressed();
             moveTaskToBack(true);   // 태스크를 백그라운드로 이동
-            finishAndRemoveTask();          // 액티비티 종료 + 태스크 리스트에서 지우기
+            finish();
         }
         t1 = System.currentTimeMillis();
     }
@@ -209,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         // 모든 알람이 바활성화(요일 미선택) 상태일 경우
         if(hashMapAlarm.size() == 0) {
             tvNextAlarm.setText(textNoAlarm);
-            unregistAlarm();
+            //unregistAlarm();
             return;
         }
 

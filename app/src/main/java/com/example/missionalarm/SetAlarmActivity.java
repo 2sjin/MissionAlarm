@@ -31,6 +31,7 @@ public class SetAlarmActivity extends AppCompatActivity {
 
     int hour, minute;
     static Alarm alarmObject;
+    static Alarm alarmObjectForTest;
 
     // Activity 초기 실행
     @Override
@@ -235,6 +236,25 @@ public class SetAlarmActivity extends AppCompatActivity {
     public void allOffToggleButtonWeek(View view) {
         for(int i=0; i<7; i++)
             tbWeek[i].setChecked(false);
+    }
+
+    // 알람 테스트 시작
+    public void startTestOnAlarm(View view) {
+        alarmObjectForTest = new Alarm();
+        alarmObjectForTest.setName(etName.getText().toString());
+        alarmObjectForTest.setTime(hour, minute);
+        alarmObjectForTest.setRingtone(uri, volumeBar.getProgress());
+        alarmObjectForTest.setVibration(switchVibration.isChecked());
+        for(int i=0; i<7; i++)
+            alarmObjectForTest.setWeek(i, tbWeek[i].isChecked());
+        for(int i=0; i<MISSION_SIZE; i++)
+            alarmObjectForTest.setMission(i, cbMission[i].isChecked());
+        for(int i=0; i<PENALTY_SIZE; i++)
+            alarmObjectForTest.setPenalty(i, cbPenalty[i]. isChecked());
+
+
+        Intent intent = new Intent(this, OnAlarmActivity.class);
+        startActivity(intent);
     }
 
 

@@ -1,11 +1,19 @@
 package com.example.missionalarm;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
+
+import androidx.core.app.NotificationCompat;
 
 import java.util.Calendar;
 
@@ -26,6 +34,7 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         alarmManager = (AlarmManager)getSystemService (Context.ALARM_SERVICE);
         intentAlarm = new Intent(this, AlarmReceiver.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intentAlarm, 0);
@@ -42,6 +51,7 @@ public class MyService extends Service {
         calendar.set(Calendar.MILLISECOND, 0);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
+
         return START_STICKY;
     }
 
