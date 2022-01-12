@@ -349,9 +349,9 @@ public class MainActivity extends AppCompatActivity {
         alarmObject.setName(data.getStringExtra("name"));
         alarmObject.setRingtone(Uri.parse(data.getStringExtra("ringtoneName")), data.getIntExtra("ringtoneVolume", 50));
         alarmObject.setVibration(data.getBooleanExtra("vibration", data.getBooleanExtra("vibration", false)));
-        for(int i=0; i<3; i++)
+        for(int i=0; i<SetAlarmActivity.MISSION_SIZE; i++)
             alarmObject.setMission(i, data.getBooleanExtra("mission_" + i, false));
-        for(int i=0; i<2; i++)
+        for(int i=0; i<SetAlarmActivity.PENALTY_SIZE; i++)
             alarmObject.setPenalty(i, data.getBooleanExtra("penalty_" + i, false));
     }
 

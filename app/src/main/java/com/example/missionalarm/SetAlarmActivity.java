@@ -12,8 +12,8 @@ import java.time.LocalTime;
 
 public class SetAlarmActivity extends AppCompatActivity {
     static final int REQUEST_CODE_RINGTONE = 10005;
-    static final int MISSION_SIZE = 3;
-    static final int PENALTY_SIZE = 2;
+    static final int MISSION_SIZE = 2;
+    static final int PENALTY_SIZE = 1;
 
     TextView tvRingtone;
     TimePicker timePicker;
@@ -134,9 +134,7 @@ public class SetAlarmActivity extends AppCompatActivity {
         tbWeek[6] = findViewById(R.id.tbSaturday);
         cbMission[0] = findViewById(R.id.cbMission1);
         cbMission[1] = findViewById(R.id.cbMission2);
-        cbMission[2] = findViewById(R.id.cbMission3);
         cbPenalty[0] = findViewById(R.id.cbPanelty1);
-        cbPenalty[1] = findViewById(R.id.cbPanelty2);
         volumeBar = findViewById(R.id.volumeBar);
     }
 

@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +26,13 @@ public class OnAlarmActivity extends AppCompatActivity {
     public static Object context;
     TextView tvOnAlarmName;
     TextView tvOnAlarmTime;
+    Button buttonOff;
+
     Alarm alarm;
+    static Alarm alarmObjectForMission;
     Ringtone ringtone;
     Vibrator vibrator;
     long[] pattern = {100, 1000};
-
 
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
@@ -43,14 +46,18 @@ public class OnAlarmActivity extends AppCompatActivity {
         // 진동 권한 획득 및 디스플레이 관련 제어
         vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
         controlDisplay();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
         // MainActivity에서 알람 객체 가져오기
         if(MainActivity.alarmObjectForOnAlarm != null)
-           alarm = MainActivity.alarmObjectForOnAlarm;
+            alarm = MainActivity.alarmObjectForOnAlarm;
         else
             alarm = SetAlarmActivity.alarmObjectForTest;
-
+        alarmObjectForMission = alarm;
 
         // 텍스트뷰 설정
         loadComponentId();
@@ -64,11 +71,17 @@ public class OnAlarmActivity extends AppCompatActivity {
         // 알람음 재생
         ringtonePlay();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            ringtone.setVolume((float)alarm.ringtoneVolume / 100.0f);
+            ringtone.setVolume((float) alarm.ringtoneVolume / 100.0f);
 
         // 진동 재생
-        if(alarm.vibration == true)
+        if (alarm.vibration == true)
             vibrator.vibrate(pattern, 0);
+
+        buttonOff.setText("미션 시작하기");
+        // 버튼 이름 변경
+        if (alarm.mission[0] == false && alarm.mission[1] == false) {
+            buttonOff.setText("알람 끄기");
+        }
     }
 
     // 미션 액티비티에서 복귀 후
@@ -95,12 +108,15 @@ public class OnAlarmActivity extends AppCompatActivity {
     // [알람 끄기] 버튼을 눌렀을 때
     public void clickedButtonOff(View view) {
         vibrator.cancel();
-   //     ringtoneRelease(); // 앙!! 까먹지망!!
-        // wakeLock.release(); // WakeLock 해제
-//        finish();
-
-        Intent intent = new Intent(this, copy.class); // copy class로 이동
-        startActivity(intent);
+        if(alarm.mission[0] == false && alarm.mission[1] == false) {
+            ringtoneRelease();
+            wakeLock.release();
+            finish();
+        }
+        else {
+            Intent intent = new Intent(this, copy.class); // copy class로 이동
+            startActivity(intent);
+        }
     }
 
     // 알람음 재생
@@ -125,6 +141,7 @@ public class OnAlarmActivity extends AppCompatActivity {
     public void loadComponentId() {
         tvOnAlarmName = findViewById(R.id.tvOnAlarmName);
         tvOnAlarmTime = findViewById(R.id.tvOnAlarmTime);
+        buttonOff = findViewById(R.id.buttonOff);
     }
 
     // 디스플레이 제어 관련 메소드

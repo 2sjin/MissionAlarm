@@ -17,10 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.InputMismatchException;
 import java.util.Random;
 
 public class copy extends AppCompatActivity {
-
+    Alarm alarmObject;
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
 
@@ -30,6 +31,7 @@ public class copy extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_copy);
 
+        alarmObject = OnAlarmActivity.alarmObjectForMission;
         controlDisplay();
 
         // 알람음 종료
@@ -50,7 +52,13 @@ public class copy extends AppCompatActivity {
         String s;
         String operation[] = {"+","-","*"};
         int randomOperation = random.nextInt(3 );
-        if(randomMission==0){
+
+        if(randomMission == 0 && alarmObject.mission[0] == false)
+            randomMission = 1;
+        else if(randomMission == 1 && alarmObject.mission[1] == false)
+            randomMission = 0;
+
+        if(randomMission == 0){
             s = sharedPreferences.getString(str[FourIndex], "");
             textView.setText(s);
         }
@@ -72,6 +80,7 @@ public class copy extends AppCompatActivity {
             result = firstNum * secondNum;
         }
         int finalResult = result;
+        int finalRandomMission = randomMission;
         View.OnClickListener listener = new View.OnClickListener()
         {
             @Override
@@ -91,8 +100,11 @@ public class copy extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show();
                             break;
                         }
-                        catch(Exception e) {
-                            Toast.makeText(getApplicationContext(), "정수를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        catch(NumberFormatException e) {
+                            if(finalRandomMission == 1)
+                                Toast.makeText(getApplicationContext(), "정수를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(getApplicationContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show();
                         }
                     }
 
