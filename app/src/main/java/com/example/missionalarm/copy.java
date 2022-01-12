@@ -26,6 +26,8 @@ public class copy extends AppCompatActivity {
     Alarm alarmObject;
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
+    MyTimer timer;
+    TextView textViewTimer;
 
     Ringtone ringtone = ((OnAlarmActivity)OnAlarmActivity.context).ringtone;
     @Override
@@ -50,19 +52,31 @@ public class copy extends AppCompatActivity {
 
         TextView textView = findViewById(R.id.textView);
         TextView textViewTitle = findViewById(R.id.textViewTitle);
+        TextView textViewTimer = findViewById(R.id.tvTimerMission);
         Button button1 = (Button) findViewById(R.id.button_1);
         Button buttonExitTest = findViewById(R.id.buttonExitTest);
         EditText editText1 = (EditText) findViewById(R.id.editView);
 
         String s;
-        String operation[] = {"+","-","*"};
+        String operation[] = {"+", "-", "*"};
         int randomOperation = random.nextInt(3 );
 
+        // 미리보기 종료 버튼 출력 여부 결정
         if(SetAlarmActivity.alarmObjectForTest == null)
             buttonExitTest.setVisibility(View.INVISIBLE);
         else
             buttonExitTest.setVisibility(View.VISIBLE);
 
+        // 벌칙 타이머 작동
+        if (alarmObject.penalty[0] == true) {
+            textViewTimer.setVisibility(View.VISIBLE);
+            timer = new MyTimer(10*1000, 1*1000, textViewTimer, this);
+            timer.start();
+        }
+        else
+            textViewTimer.setVisibility(View.INVISIBLE);
+
+        // 미션별 체크박스 체크 여부 확인
         if(randomMission == 0 && alarmObject.mission[0] == false)
             randomMission = 1;
         else if(randomMission == 1 && alarmObject.mission[1] == false)
@@ -103,37 +117,29 @@ public class copy extends AppCompatActivity {
                             String s1 = editText1.getText().toString();
                             Log.d("문제발생", s1);
                             if (str[FourIndex].equals(s1)) {
+                                cancelTimer(false);
                                 ringtoneRelease();
                                 finish();
                             } else if (finalResult == Integer.parseInt(s1)) {
+                                cancelTimer(false);
                                 ringtoneRelease();
                                 finish();
-                            } else
+                            } else {
+                                if(alarmObject.penalty[0] == true) {
+                                    cancelTimer(true); // 타이머 취소 후 재시작
+                                }
                                 Toast.makeText(getApplicationContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show();
+                            }
                             break;
                         }
                         catch(NumberFormatException e) {
+                            cancelTimer(true); // 타이머 취소 후 재시작
                             if(finalRandomMission == 1)
                                 Toast.makeText(getApplicationContext(), "정수를 입력해주세요.", Toast.LENGTH_SHORT).show();
                             else
                                 Toast.makeText(getApplicationContext(), "틀렸습니다!", Toast.LENGTH_SHORT).show();
                         }
                     }
-
-                  /*  case R.id.button_4:{
-                        String PhoneNumber = "+821025773617";
-                        String sms = "깨워주세요!! 알람이 울렸지만 일어나지못했습니다!!";
-                        try {
-                            SmsManager smsManager = SmsManager.getDefault();
-                            smsManager.sendTextMessage(PhoneNumber, null, sms, null, null);
-                            Toast.makeText(getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            Toast.makeText(getApplicationContext(), "전송 오류!", Toast.LENGTH_LONG).show();
-                            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();//오류 원인이 찍힌다.
-                            e.printStackTrace();
-                        }
-                        break;
-                    }*/
                 }
             }
         };
@@ -188,9 +194,27 @@ public class copy extends AppCompatActivity {
         wakeLock.acquire(); // WakeLock 깨우기
     }
 
+    // 테스트(미리보기) 종료
     public void exitTest(View view) {
+        cancelTimer(false);
         ringtoneRelease();
         finish();
     }
+
+    // 컴포넌트를 눌렀을 때 타이머 재시작
+    public void onClickForTimerRestart(View view) {
+        cancelTimer(true);
+    }
+
+    // 타이머 취소 및 재시작
+    public void cancelTimer(boolean restart) {
+        if(alarmObject.penalty[0] == true) {
+            timer.cancel();
+            if(restart)
+                timer.start();
+        }
+    }
+
+
 
 }

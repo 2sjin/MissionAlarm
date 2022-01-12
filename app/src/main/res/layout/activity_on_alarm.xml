@@ -8,6 +8,19 @@
     tools:context=".OnAlarmActivity">
 
     <TextView
+        android:id="@+id/tvTimerOnAlarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="88dp"
+        android:gravity="center"
+        android:text="600초 후 문자 전송"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="22dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/tvOnAlarmName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +48,6 @@
         android:layout_marginBottom="408dp"
         android:onClick="clickedButtonOff"
         android:text="알람 끄기"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 
 </LinearLayout>

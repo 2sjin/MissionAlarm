@@ -8,19 +8,15 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.provider.Settings;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class OnAlarmActivity extends AppCompatActivity {
     public static Object context;
@@ -36,6 +32,8 @@ public class OnAlarmActivity extends AppCompatActivity {
 
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
+    MyTimer timer;
+    TextView textViewTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +49,8 @@ public class OnAlarmActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
+        textViewTimer = findViewById(R.id.tvTimerOnAlarm);
 
         // MainActivity에서 알람 객체 가져오기(테스트 중일 경우 SetAlarmActivity에서)
         if(SetAlarmActivity.alarmObjectForTest == null)
@@ -77,18 +77,27 @@ public class OnAlarmActivity extends AppCompatActivity {
         if (alarm.vibration == true)
             vibrator.vibrate(pattern, 0);
 
-
         // 버튼 텍스트 변경
         buttonOff.setText("미션 시작하기");
         if (alarm.mission[0] == false && alarm.mission[1] == false) {
             buttonOff.setText("알람 끄기");
         }
+
+        // 벌칙 타이머 작동
+        if (alarm.penalty[0] == true) {
+            textViewTimer.setVisibility(View.VISIBLE);
+            timer = new MyTimer(10*1000, 1*1000, textViewTimer, this);
+            timer.start();
+        }
+        else
+            textViewTimer.setVisibility(View.INVISIBLE);
     }
 
     // 미션 액티비티에서 복귀 후
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        cancelTimer(false);
         finish();
     }
 
@@ -106,9 +115,10 @@ public class OnAlarmActivity extends AppCompatActivity {
     }
      @Override public void onBackPressed() { return; }
 
-    // [알람 끄기] 버튼을 눌렀을 때
+    // [알람 끄기] 또는 [미션 시작하기] 버튼을 눌렀을 때
     public void clickedButtonOff(View view) {
         vibrator.cancel();
+        cancelTimer(false);
         if(alarm.mission[0] == false && alarm.mission[1] == false) {
             ringtoneRelease();
             wakeLock.release();
@@ -167,5 +177,14 @@ public class OnAlarmActivity extends AppCompatActivity {
                 | PowerManager.ACQUIRE_CAUSES_WAKEUP
                 | PowerManager.ON_AFTER_RELEASE,"WAKE:LOCK");
         wakeLock.acquire(); // WakeLock 깨우기
+    }
+
+    // 타이머 취소 및 재시작
+    public void cancelTimer(boolean restart) {
+        if(alarm.penalty[0] == true) {
+            timer.cancel();
+            if(restart)
+                timer.start();
+        }
     }
 }
