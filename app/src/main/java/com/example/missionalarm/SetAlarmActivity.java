@@ -22,7 +22,6 @@ public class SetAlarmActivity extends AppCompatActivity {
     ToggleButton [] tbWeek = new ToggleButton[7];
     CheckBox [] cbMission = new CheckBox[MISSION_SIZE];
     Switch [] switchPenalty = new Switch[PENALTY_SIZE];
-    EditText [] etPhone = new EditText[5];
     SeekBar volumeBar;
 
     Uri uri;
@@ -80,21 +79,6 @@ public class SetAlarmActivity extends AppCompatActivity {
                     vibrator.vibrate(1000);
                 else
                     vibrator.cancel();
-            }
-        });
-
-        // 이벤트: 벌칙(문자) 스위치 조작 시
-        switchPenalty[0].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked == true) {
-                    for(int i=0; i<5; i++)
-                        etPhone[i].setVisibility(View.VISIBLE);
-                }
-                else {
-                    for (int i=0; i<5; i++)
-                        etPhone[i].setVisibility(View.GONE);
-                }
             }
         });
     }
