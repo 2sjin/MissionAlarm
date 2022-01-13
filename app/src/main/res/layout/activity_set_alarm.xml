@@ -264,6 +264,7 @@
                     android:id="@+id/switchPenalty1"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:checked="false"
                     android:text="문자메시지 전송" />
 
                 <EditText

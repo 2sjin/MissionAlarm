@@ -74,7 +74,7 @@ public class copy extends AppCompatActivity {
         // 벌칙 타이머 작동
         if (alarmObject.penalty[0] == true) {
             textViewTimer.setVisibility(View.VISIBLE);
-            timer = new MyTimer(300*1000, 1*1000,
+            timer = new MyTimer(10*1000, 1*1000,
                     textViewTimer, this, button1, alarmObject.phone);
             timer.start();
         }

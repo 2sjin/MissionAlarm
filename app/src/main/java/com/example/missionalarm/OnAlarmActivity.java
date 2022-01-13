@@ -26,6 +26,7 @@ public class OnAlarmActivity extends AppCompatActivity {
 
     Alarm alarm;
     static Alarm alarmObjectForMission;
+    public static boolean failedMission = false;
     Ringtone ringtone;
     Vibrator vibrator;
     long[] pattern = {100, 1000};
@@ -51,6 +52,7 @@ public class OnAlarmActivity extends AppCompatActivity {
         super.onResume();
 
         textViewTimer = findViewById(R.id.tvTimerOnAlarm);
+        failedMission = false;
 
         // MainActivity에서 알람 객체 가져오기(테스트 중일 경우 SetAlarmActivity에서)
         if(SetAlarmActivity.alarmObjectForTest == null)
@@ -86,8 +88,8 @@ public class OnAlarmActivity extends AppCompatActivity {
         // 벌칙 타이머 작동
         if (alarm.penalty[0] == true) {
             textViewTimer.setVisibility(View.VISIBLE);
-            timer = new MyTimer(3*1000, 1*1000,
-                    textViewTimer, this, null, alarm.phone);
+            timer = new MyTimer(10*1000, 1*1000,
+                    textViewTimer, this, buttonOff, alarm.phone);
             timer.start();
         }
         else
@@ -119,15 +121,22 @@ public class OnAlarmActivity extends AppCompatActivity {
     // [알람 끄기] 또는 [미션 시작하기] 버튼을 눌렀을 때
     public void clickedButtonOff(View view) {
         vibrator.cancel();
-        cancelTimer(false);
-        if(alarm.mission[0] == false && alarm.mission[1] == false) {
-            ringtoneRelease();
+        if(failedMission == true) {
+            cancelTimer(false);
             wakeLock.release();
+            ringtoneRelease();
             finish();
         }
         else {
-            Intent intent = new Intent(this, copy.class); // copy class로 이동
-            startActivity(intent);
+            cancelTimer(false);
+            if (alarm.mission[0] == false && alarm.mission[1] == false) {
+                ringtoneRelease();
+                wakeLock.release();
+                finish();
+            } else {
+                Intent intent = new Intent(this, copy.class); // copy class로 이동
+                startActivity(intent);
+            }
         }
     }
 

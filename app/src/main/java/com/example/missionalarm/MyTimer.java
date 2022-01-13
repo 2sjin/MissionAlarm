@@ -36,9 +36,14 @@ class MyTimer extends CountDownTimer {
 
     @Override
     public void onFinish() {
-        textView.setText("문자메시지 전송");
+        // 미션 화면일 경우 버튼을 끄기 버튼으로 전환
+        OnAlarmActivity.failedMission = true;
+        copy.failedMission = true;
+        if(button != null)
+            button.setText("알람 끄기");
 
         // 문자메시지 전송
+        textView.setText("문자메시지 전송");
         String PhoneNumber = phone;
         if(phone.substring(0, 3).equals("010"))
             PhoneNumber = "+8210" + phone.substring(3);
@@ -53,11 +58,6 @@ class MyTimer extends CountDownTimer {
             Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();//오류 원인이 찍힌다.
             e.printStackTrace();
         }
-
-        // 미션 화면일 경우 버튼을 끄기 버튼으로 전환
-        copy.failedMission = true;
-        if(button != null)
-            button.setText("알람 끄기");
     }
 
     public void showDialog(String title, String message) {
