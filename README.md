@@ -3,6 +3,9 @@
 
 - 기여자: 이승진, 조준호
 
+## 산출물
+[☞ 프로젝트 결과보고서](https://drive.google.com/file/d/1IQOM7LgWWpYaPyR1uLtqLbogkC8rg3IS/view?usp=sharing)
+
 ## 목표
 - 기존 알람 앱에 미션 시스템과 벌칙 시스템을 결합한 알람 앱을 개발한다.
 - 늦잠으로 인하여 좋지 않은 상황이 발생하는 것을 방지한다.
